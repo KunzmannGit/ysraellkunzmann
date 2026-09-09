@@ -84,11 +84,6 @@ function LoginFormInner({ className }: { className?: string }) {
       <Button type="submit" variant="gold" size="lg" className="w-full" disabled={busy}>
         {busy ? "Entrando…" : "Entrar"}
       </Button>
-
-      <p className="text-smoke text-xs leading-relaxed">
-        O usuário é criado no painel do Supabase, em Authentication → Users. Não há
-        cadastro aberto neste site.
-      </p>
     </form>
   );
 }

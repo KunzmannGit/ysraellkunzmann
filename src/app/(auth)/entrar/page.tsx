@@ -31,10 +31,14 @@ export default function EntrarPage() {
         <p className="font-display text-bone text-3xl leading-none">YK</p>
         <p className="kicker mt-3">Painel · {site.creci}</p>
 
-        <h1 className="font-display text-bone mt-10 text-4xl leading-tight">
-          Bem-vindo
+        {/*
+          O painel tem um usuario so. Chamar pelo nome nao e enfeite:
+          se um dia esta tela abrir com outro nome, algo esta errado.
+        */}
+        <h1 className="font-display text-bone mt-10 text-[clamp(1.6rem,6.5vw,2.25rem)] leading-[1.08]">
+          Bem-vindo de volta,
           <br />
-          <span className="text-gilded italic">de volta.</span>
+          <span className="text-gilded italic">Sr. {site.name}.</span>
         </h1>
 
         {supabaseEnabled ? (
