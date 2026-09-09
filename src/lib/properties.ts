@@ -1,14 +1,20 @@
 import { cache } from "react";
 import { seedProperties } from "@/data/properties";
-import { getServerSupabase } from "@/lib/supabase/server";
+import { getPublicSupabase } from "@/lib/supabase/public";
 import type { Kind, Media, Property, Purpose, Status, Tour } from "@/lib/types";
 
 /* ═══════════════════════════════════════════════════════════
-   CAMADA DE DADOS
-   Regra: se o Supabase responder, o Supabase manda. Se ele nao
-   estiver conectado (ou falhar), o site nao quebra — serve o
-   catalogo semente. Um site de corretor no ar vale mais que um
-   site correto fora do ar.
+   CAMADA DE DADOS — LADO PUBLICO
+
+   Regra 1: se o Supabase responder, o Supabase manda. Se ele
+   nao estiver conectado (ou falhar), o site nao quebra — serve
+   o catalogo semente. Um site de corretor no ar vale mais que
+   um site correto fora do ar.
+
+   Regra 2: aqui se usa o cliente SEM sessao. Tudo que este
+   arquivo le e publico, e `generateStaticParams` roda no build,
+   onde `cookies()` nao existe. Trocar isto por getServerSupabase()
+   derruba o build de producao — ja aconteceu uma vez.
    ═══════════════════════════════════════════════════════════ */
 
 interface PropertyRow {
@@ -89,7 +95,7 @@ const PUBLIC_STATUSES: Status[] = ["publicado", "reservado"];
 
 /** Todos os imóveis visíveis ao público, do mais recente ao mais antigo. */
 export const getProperties = cache(async (): Promise<Property[]> => {
-  const supabase = await getServerSupabase();
+  const supabase = getPublicSupabase();
 
   if (supabase) {
     const { data, error } = await supabase
@@ -116,7 +122,7 @@ export const getProperties = cache(async (): Promise<Property[]> => {
 });
 
 export const getPropertyBySlug = cache(async (slug: string): Promise<Property | null> => {
-  const supabase = await getServerSupabase();
+  const supabase = getPublicSupabase();
 
   if (supabase) {
     const { data, error } = await supabase
