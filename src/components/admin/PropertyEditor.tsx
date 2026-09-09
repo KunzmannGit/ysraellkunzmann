@@ -79,6 +79,27 @@ const EMPTY: DraftState = {
   tour: null,
 };
 
+/**
+ * Pede ao servidor que descarte o cache das páginas afetadas.
+ *
+ * Sem isto, salvar no painel não muda nada no site por até uma hora,
+ * e nem recarregar com Ctrl+Shift+R adianta — o cache é do servidor.
+ * É melhor falhar em silêncio: se a invalidação não for, o conteúdo
+ * ainda aparece quando o prazo vencer, e nada disso deve impedir o
+ * salvamento de dar certo.
+ */
+async function revalidar(slug: string) {
+  try {
+    await fetch("/api/revalidar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug }),
+    });
+  } catch {
+    /* o prazo de 1h continua valendo como rede de segurança */
+  }
+}
+
 const num = (v: string) => (v.trim() === "" ? null : Number(v.replace(",", ".")));
 const int = (v: string) => (v.trim() === "" ? null : Math.trunc(Number(v)));
 
@@ -392,7 +413,9 @@ export function PropertyEditor({
       return;
     }
 
-    setMessage({ tone: "ok", text: "Salvo." });
+    await revalidar(payload.slug);
+
+    setMessage({ tone: "ok", text: "Salvo e publicado." });
     router.refresh();
     if (!id && data?.id) router.replace(`/admin/imoveis/${data.id}`);
   }
@@ -412,6 +435,7 @@ export function PropertyEditor({
       setMessage({ tone: "erro", text: error.message });
       return;
     }
+    await revalidar(draft.slug);
     router.push("/admin");
     router.refresh();
   }
