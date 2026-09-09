@@ -53,7 +53,7 @@ Instagram e LinkedIn em `src/lib/site.ts`.
 
 1. [Rodar na sua máquina](#1-rodar-na-sua-máquina)
 2. [Seus dados no site](#2-seus-dados-no-site)
-3. [Criar o e-mail do domínio](#3-criar-o-e-mail-do-domínio) · [usar](#3c--usar-o-contato-no-dia-a-dia) · [aviso de contato](#3d--aviso-por-e-mail-a-cada-contato-recebido)
+3. [Criar o e-mail do domínio](#3-criar-o-e-mail-do-domínio) · [aviso de contato](#3d--aviso-por-e-mail-a-cada-contato-recebido)
 4. [Ligar o Supabase](#4-ligar-o-supabase)
 5. [Publicar na Vercel](#5-publicar-na-vercel)
 6. [Apontar o domínio](#6-apontar-o-domínio)
@@ -135,70 +135,43 @@ em `src/app/(site)/sobre/page.tsx`.
 
 ## 3. Criar o e-mail do domínio
 
-`contato@ysraellkunzmann.com` não vem junto com o domínio — é um serviço à parte.
-Duas opções gratuitas, e a diferença que importa é **uma só**: dá para *enviar*
-como `contato@`, ou só *receber*?
+`contato@ysraellkunzmann.com` não vem junto com o domínio — é serviço à parte.
 
-| | Cloudflare Email Routing | **Zoho Mail Free** |
-|---|---|---|
-| Preço | Grátis | Grátis (até 5 contas, 5 GB cada) |
-| Receber em `contato@` | Sim | Sim |
-| **Responder como `contato@`** | **Não** — sai do Hotmail | **Sim** |
-| Onde você lê | Na sua caixa do Hotmail | Webmail + app Zoho Mail |
-| Instalação | ~3 min | ~15 min |
+> **Zoho não serve mais.** O "Forever Free Plan" que circula em tutoriais **não
+> existe na página brasileira**: lá só há Mail Lite (R$ 5/usuário/mês), Workplace
+> (R$ 12), Premium (R$ 20) e um teste de 15 dias. Verificado em setembro de 2026.
 
-**Recomendo o Zoho.** O motivo é comercial, não técnico: o cliente escreve para
-`contato@ysraellkunzmann.com` e recebe resposta de `ouro.imoveis@hotmail.com`.
-Isso derruba exatamente a credibilidade que o site está construindo. Tour imersivo
-com resposta de Hotmail não combinam.
+**Escolha feita: Cloudflare Email Routing.** Grátis para sempre, três minutos, e
+o DNS já está no Cloudflare. Ele **recebe** em `contato@ysraellkunzmann.com` e
+encaminha para a caixa que você já usa.
 
-> As duas usam registros **MX**, e um domínio só tem um conjunto de MX.
-> **São mutuamente exclusivas** — escolha uma.
+O que ele **não** faz: enviar *como* `contato@`. As respostas saem do seu
+endereço pessoal. Foi uma troca consciente — custo e simplicidade acima do
+remetente na resposta. Se um dia isso incomodar, as saídas são Zoho Mail Lite
+(R$ 5/mês) ou um relay SMTP ligado ao Gmail.
 
-### 3.A — Zoho Mail Free (recomendado)
+### Passo a passo
 
-1. [zoho.com/mail](https://www.zoho.com/mail/) → **Sign Up Free** → role até o
-   **Forever Free Plan** (fica discreto, abaixo dos planos pagos).
-2. *Sign up with a domain I already own* → `ysraellkunzmann.com`.
-3. O Zoho pede um registro **TXT** para provar que o domínio é seu. Crie no
-   Cloudflare, em **DNS → Records**, com o valor que ele mostrar.
-4. Verificado, crie a conta `contato`.
-5. O Zoho entrega os **MX** dele. No Cloudflare, apague os MX que existirem e crie
-   os três do Zoho, todos com a nuvem **cinza**.
-6. Adicione também o **SPF** e o **DKIM** que ele indicar. Sem eles seu e-mail cai
-   no spam — e corretor no spam é corretor invisível.
-7. Instale o app **Zoho Mail** no celular.
+1. Cloudflare → domínio `ysraellkunzmann.com` → **Email → Email Routing** →
+   **Get started**.
+2. **Antes de aceitar os MX dele, apague os registros do Porkbun** que sobraram:
+   - MX `fwd1.porkbun.com` (prioridade 10)
+   - MX `fwd2.porkbun.com` (prioridade 20)
+   - TXT `v=spf1 include:_spf.porkbun.com ~all`
 
-### 3.B — Cloudflare Email Routing (mais rápido, só recebe)
-
-1. No Cloudflare, painel do domínio → **Email → Email Routing** → **Get started**.
-2. Ele cria os MX sozinho. Aceite.
-3. **Create address**: `contato@ysraellkunzmann.com` → encaminha para
+   Dois conjuntos de MX convivendo entregam seu e-mail para ninguém.
+3. Aceite os MX que o Cloudflare cria.
+4. **Create address**: `contato@ysraellkunzmann.com` → encaminhar para
    `ouro.imoveis@hotmail.com`.
-4. Confirme o e-mail de verificação que chega no Hotmail.
+5. Confirme o e-mail de verificação que chega no Hotmail.
 
-Nos dois casos o site já está pronto: aponta para `contato@` e mantém
-`ouro.imoveis@hotmail.com` visível como alternativa na página de contato.
+### Como usar no dia a dia
 
----
+Não muda nada na sua rotina: continua lendo tudo no Hotmail. A diferença é que o
+endereço que você divulga — no site, no cartão, no anúncio — passa a ser
+`contato@ysraellkunzmann.com`, e ele cai na mesma caixa.
 
-## 3.C — Usar o contato@ no dia a dia
-
-Depois de criado no Zoho:
-
-| Onde | Como |
-|---|---|
-| Celular | App **Zoho Mail** (iOS/Android) |
-| Computador | **mail.zoho.com** pelo navegador |
-| Outlook/Gmail por IMAP | O plano gratuito costuma **não** liberar IMAP/POP. Confira antes de contar com isso. |
-
-**Não fique com duas caixas.** No Zoho, em **Settings → Mail Accounts → Email
-Forwarding**, encaminhe uma cópia para `ouro.imoveis@hotmail.com` e marque para
-manter a original. Assim você **lê tudo no Hotmail**, como já faz, e só abre o
-Zoho quando for **responder** um cliente — que é a única parte em que o remetente
-importa.
-
----
+A página de contato do site mostra os dois endereços, com o do domínio primeiro.
 
 ## 3.D — Aviso por e-mail a cada contato recebido
 
@@ -237,9 +210,19 @@ Não precisa mexer em `LEAD_NOTIFY_FROM` nem `LEAD_NOTIFY_TO`: sem elas o site j
 envia de `site@send.ysraellkunzmann.com` para os dois endereços de
 `src/lib/site.ts`.
 
+**Para onde o aviso vai**
+
+Como o `contato@` é **encaminhado** para o Hotmail, mandar o aviso para os dois
+endereços faria chegar **duas cópias idênticas na mesma caixa**. Por isso o
+padrão é enviar só para `ouro.imoveis@hotmail.com` — um salto a menos, sem
+duplicata. Para mudar, é uma variável:
+
+```bash
+npx vercel env add LEAD_NOTIFY_TO production
+```
+
 **Como o aviso se comporta**
 
-- Chega para `contato@ysraellkunzmann.com` **e** `ouro.imoveis@hotmail.com`.
 - O **Reply-To** aponta para quem escreveu: responder na sua caixa já vai direto
   para o cliente, sem copiar endereço.
 - Se o banco estiver fora no momento, o e-mail avisa em destaque que **ele é o
