@@ -26,7 +26,7 @@ export default async function AdminHome() {
         <h1 className="font-display text-bone text-2xl">Não consegui ler o banco.</h1>
         <p className="text-ash mt-3 max-w-xl leading-relaxed">
           {result.reason === "sem-supabase"
-            ? "O Supabase ainda não está conectado. Rode a migração em supabase/migrations/0001_init.sql e preencha as variáveis de ambiente — o README tem o passo a passo."
+            ? "O Supabase ainda não está conectado. Rode a migração em supabase/migrations/20260909190000_init.sql e preencha as variáveis de ambiente — o README tem o passo a passo."
             : `O banco respondeu com erro: ${result.reason}`}
         </p>
         <p className="text-smoke mt-5 text-sm">

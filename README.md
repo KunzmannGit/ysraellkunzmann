@@ -163,7 +163,7 @@ senha do banco no seu gerenciador; ela não é usada pelo site, mas é pedida em
 operações administrativas.
 
 **4.2** No projeto: **SQL Editor → New query**. Cole o conteúdo inteiro de
-`supabase/migrations/0001_init.sql` e execute. Isso cria as tabelas `properties` e
+`supabase/migrations/20260909190000_init.sql` e execute. Isso cria as tabelas `properties` e
 `leads`, as políticas de segurança e o bucket de arquivos `midia`.
 
 **4.3** Crie seu usuário: **Authentication → Users → Add user**. Marque

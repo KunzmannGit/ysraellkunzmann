@@ -36,3 +36,10 @@ yarn-error.log*
 
 # midia pesada local (suba pro Supabase Storage, nao pro git)
 /public/uploads
+
+.vercel
+.env*
+
+# supabase cli: estado local do projeto ligado.
+# O pooler-url daqui carrega a string de conexao do banco.
+/supabase/.temp
