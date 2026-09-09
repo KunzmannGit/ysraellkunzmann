@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { site } from "@/lib/site";
 
@@ -21,7 +23,20 @@ export const alt = `${site.name} — ${site.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+export default async function OpenGraphImage() {
+  // A Bodoni vem de arquivos do repositorio, e nao do Google Fonts.
+  // Buscar fonte pela rede durante o build significa que uma
+  // instabilidade deles quebraria o deploy — preco alto demais por
+  // 120 KB que cabem no git.
+  //
+  // Sao instancias ESTATICAS, geradas com fontTools a partir das
+  // variaveis. O Satori nao renderiza fonte variavel: engasga com
+  // "Cannot read properties of undefined" no meio do build.
+  const [roman, italic] = await Promise.all([
+    readFile(join(process.cwd(), "src/app/_fonts/bodoni.ttf")),
+    readFile(join(process.cwd(), "src/app/_fonts/bodoni-italic.ttf")),
+  ]);
+
   return new ImageResponse(
     (
       <div
@@ -62,8 +77,8 @@ export default function OpenGraphImage() {
               borderRadius: 16,
               border: "2px solid rgba(201,162,39,0.45)",
               color: "#C9A227",
-              fontSize: 27,
-              fontWeight: 700,
+              fontFamily: "Bodoni",
+              fontSize: 30,
               letterSpacing: 1,
             }}
           >
@@ -88,10 +103,11 @@ export default function OpenGraphImage() {
             style={{
               display: "flex",
               color: "#ede9f2",
-              fontSize: 76,
-              lineHeight: 1.06,
-              letterSpacing: -2,
-              maxWidth: 900,
+              fontFamily: "Bodoni",
+              fontSize: 82,
+              lineHeight: 1.04,
+              letterSpacing: -1,
+              maxWidth: 940,
             }}
           >
             Imóveis que você atravessa
@@ -100,9 +116,10 @@ export default function OpenGraphImage() {
             style={{
               display: "flex",
               color: "#e7c65b",
-              fontSize: 76,
-              lineHeight: 1.06,
-              letterSpacing: -2,
+              fontFamily: "Bodoni",
+              fontSize: 82,
+              lineHeight: 1.04,
+              letterSpacing: -1,
               fontStyle: "italic",
             }}
           >
@@ -122,7 +139,7 @@ export default function OpenGraphImage() {
             }}
           />
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ display: "flex", color: "#ede9f2", fontSize: 33 }}>{site.name}</div>
+            <div style={{ display: "flex", fontFamily: "Bodoni", color: "#ede9f2", fontSize: 38 }}>{site.name}</div>
             <div style={{ display: "flex", color: "#8b8496", fontSize: 21, letterSpacing: 3 }}>
               {site.region} · {site.state}
             </div>
@@ -130,6 +147,12 @@ export default function OpenGraphImage() {
         </div>
       </div>
     ),
-    size,
+    {
+      ...size,
+      fonts: [
+        { name: "Bodoni", data: roman, style: "normal", weight: 400 },
+        { name: "Bodoni", data: italic, style: "italic", weight: 400 },
+      ],
+    },
   );
 }
