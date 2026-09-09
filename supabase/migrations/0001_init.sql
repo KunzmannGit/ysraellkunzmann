@@ -172,6 +172,35 @@ create policy "so autenticado atualiza leads"
   to authenticated
   using (true) with check (true);
 
+-- ────────────────────── PERMISSOES EXPLICITAS ──────────────────
+--
+--  Necessarias porque o projeto foi criado com
+--  "Automatically expose new tables" DESLIGADO — que e a
+--  recomendacao do proprio Supabase. Sem auto-exposicao, toda
+--  tabela nasce invisivel para a API ate ser liberada aqui.
+--
+--  Isso e melhor do que parece: uma tabela futura com dado
+--  sensivel (CPF, contrato, documento) nao vaza para a API
+--  publica por esquecimento. Ela nasce fechada.
+--
+--  Duas travas independentes protegem cada tabela:
+--    1. GRANT — o papel pode tocar na tabela?
+--    2. RLS   — e em QUAIS linhas?
+--  Repare que `anon` recebe INSERT em leads mas NUNCA select.
+--  Mesmo que uma politica de RLS fosse escrita errada amanha,
+--  o visitante anonimo continuaria incapaz de ler a sua caixa
+--  de contatos, porque falta a permissao na camada de baixo.
+
+grant usage on schema public to anon, authenticated;
+
+-- Imoveis: visitante le (a RLS filtra para publicados); voce faz o resto.
+grant select                       on public.properties to anon, authenticated;
+grant insert, update, delete       on public.properties to authenticated;
+
+-- Contatos: visitante so DEPOSITA. Ler e privilegio seu.
+grant insert                       on public.leads      to anon, authenticated;
+grant select, update, delete       on public.leads      to authenticated;
+
 -- ───────────────────────── STORAGE ─────────────────────────────
 -- Bucket publico para fotos, videos e panoramas dos imoveis.
 
