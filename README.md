@@ -14,7 +14,7 @@ Tudo open source, tudo em camada gratuita.
 | Hospedagem | Vercel | Hobby |
 | DNS | Cloudflare | Grátis |
 | Registro | Porkbun (`ysraellkunzmann.com`) | já pago |
-| Código | [YsraellKunzmann/ysraellkunzmann](https://github.com/YsraellKunzmann/ysraellkunzmann) | privado |
+| Código | [KunzmannGit/ysraellkunzmann](https://github.com/KunzmannGit/ysraellkunzmann) | privado |
 
 ---
 
@@ -181,13 +181,13 @@ banco e nunca pode ir para o navegador.
 ## 5. Publicar na Vercel
 
 O código já está em
-[github.com/YsraellKunzmann/ysraellkunzmann](https://github.com/YsraellKunzmann/ysraellkunzmann).
+[github.com/KunzmannGit/ysraellkunzmann](https://github.com/KunzmannGit/ysraellkunzmann).
 A partir daqui, todo `git push` na `main` publica sozinho.
 
 ### Pelo navegador
 
 1. [vercel.com](https://vercel.com) → **Add New → Project** → importe
-   `YsraellKunzmann/ysraellkunzmann`. A Vercel detecta Next.js; não mude nada.
+   `KunzmannGit/ysraellkunzmann`. A Vercel detecta Next.js; não mude nada.
 2. **Settings → Environment Variables**: adicione `NEXT_PUBLIC_SUPABASE_URL` e
    `NEXT_PUBLIC_SUPABASE_ANON_KEY` em *Production*, *Preview* e *Development*.
 3. **Deploy**.

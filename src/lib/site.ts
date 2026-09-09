@@ -47,7 +47,7 @@ export const site = {
   social: {
     instagram: "https://instagram.com/",
     linkedin: "https://linkedin.com/in/",
-    github: "https://github.com/YsraellKunzmann",
+    github: "https://github.com/KunzmannGit",
   },
 } as const;
 
