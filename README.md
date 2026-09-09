@@ -18,6 +18,37 @@ Tudo open source, tudo em camada gratuita.
 
 ---
 
+## Estado atual — no ar
+
+| | |
+|---|---|
+| **Site** | https://ysraellkunzmann.com |
+| **Painel** | https://ysraellkunzmann.com/admin |
+| **Supabase** | `zobkmtqckibdfckjgmcp` · South America (São Paulo) |
+| **Vercel** | `ysraell-kunzmann/ysraellkunzmann` · Hobby |
+| **DNS** | Cloudflare (nuvem cinza) · registro no Porkbun |
+
+Verificado em produção:
+
+```
+11 rotas + 404          200 / 404 corretos, TLS válido
+www → apex              308, preservando o caminho
+http → https            308
+/admin sem sessão       307 → /entrar
+ler imóveis (anônimo)   200  permitido
+ler contatos (anônimo)  401  BLOQUEADO
+criar contato (anônimo) 201  permitido
+criar imóvel (anônimo)  401  BLOQUEADO
+storage público         200  fotos carregam sem chave
+POST /api/leads         stored: true
+```
+
+**Falta:** criar `contato@ysraellkunzmann.com` (seção 3) e preencher os links de
+Instagram e LinkedIn em `src/lib/site.ts`.
+
+
+---
+
 ## Sumário
 
 1. [Rodar na sua máquina](#1-rodar-na-sua-máquina)
