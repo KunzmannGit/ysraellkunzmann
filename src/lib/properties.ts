@@ -50,9 +50,24 @@ interface PropertyRow {
   via_partner: boolean | null;
 }
 
+/**
+ * Capa de emergência: um imóvel publicado sem foto.
+ *
+ * Antes isto era a foto de uma casa qualquer, o que fazia o card
+ * mentir sobre o imóvel. Agora é uma textura neutra, que se lê como
+ * "ainda não há foto" e não como "este é o imóvel".
+ */
 const FALLBACK_COVER: Media = {
-  url: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=2400&q=82",
-  alt: "Imóvel sem foto de capa",
+  url:
+    "data:image/svg+xml;utf8," +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
+        <rect width="1200" height="800" fill="#121017"/>
+        <text x="600" y="405" text-anchor="middle" fill="#4a4453"
+              font-family="monospace" font-size="26" letter-spacing="8">FOTOS EM BREVE</text>
+      </svg>`.replace(/\s+/g, " "),
+    ),
+  alt: "Imóvel ainda sem fotografia",
 };
 
 function rowToProperty(row: PropertyRow): Property {
@@ -144,10 +159,16 @@ export async function getFeatured(): Promise<Property[]> {
   return marked.length > 0 ? marked : all.slice(0, 3);
 }
 
-/** Um imóvel para estrelar a home. Prioriza destaque com tour. */
-export async function getHeroProperty(): Promise<Property> {
+/**
+ * Um imóvel para estrelar a home. Prioriza destaque com tour.
+ *
+ * Devolve `null` quando não há nada publicado — e o herói sabe se
+ * virar sozinho nesse caso. Forçar um imóvel aqui obrigaria a
+ * inventar um, que é exatamente o que este site não faz.
+ */
+export async function getHeroProperty(): Promise<Property | null> {
   const all = await getProperties();
-  return all.find((p) => p.featured && p.tour) ?? all.find((p) => p.featured) ?? all[0] ?? seedProperties[0];
+  return all.find((p) => p.featured && p.tour) ?? all.find((p) => p.featured) ?? all[0] ?? null;
 }
 
 export async function getRelated(current: Property, limit = 3): Promise<Property[]> {

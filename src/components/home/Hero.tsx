@@ -14,6 +14,17 @@ import { Magnetic } from "@/components/ui/Magnetic";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 /**
+ * Imagem de fundo para quando nenhum imóvel está publicado.
+ *
+ * É deliberadamente atmosférica e não vem acompanhada de preço,
+ * endereço ou cartão: assim se lê como direção de arte, e não como
+ * "este é um imóvel da carteira". Imagem de banco fingindo ser
+ * anúncio é o tipo de mentira pequena que derruba o site inteiro.
+ */
+const FUNDO_NEUTRO =
+  "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=2400&q=82";
+
+/**
  * A primeira tela.
  *
  * Regra: o imóvel é a única luz. O texto flutua sobre ele, as barras
@@ -21,7 +32,7 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  * que a página nunca pareça uma foto parada — mas também nunca
  * chame atenção para a animação em si.
  */
-export function Hero({ featured }: { featured: Property }) {
+export function Hero({ featured }: { featured: Property | null }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -34,19 +45,15 @@ export function Hero({ featured }: { featured: Property }) {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-38%"]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
 
+  const capa = featured?.cover.url ?? FUNDO_NEUTRO;
+  const capaAlt = featured?.cover.alt ?? "Estrutura de cobertura de um galpão vista de baixo";
+
   return (
     <section ref={ref} className="relative h-[100svh] min-h-[38rem] overflow-hidden">
       {/* ── Camada 1: a fotografia ── */}
       <motion.div className="absolute inset-0" style={{ y: imgY, scale: imgScale }}>
         <div className="animate-breathe relative h-full w-full">
-          <Image
-            src={featured.cover.url}
-            alt={featured.cover.alt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
+          <Image src={capa} alt={capaAlt} fill priority sizes="100vw" className="object-cover" />
         </div>
         {/* Escurecimento em três passadas: sem isso o texto não sobrevive à foto */}
         <div className="from-noir via-noir/55 absolute inset-0 bg-linear-to-t to-transparent" />
@@ -84,46 +91,45 @@ export function Hero({ featured }: { featured: Property }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.85, ease: EASE }}
           >
-            <span className="kicker text-gold">{site.role}</span>
+            <span className="kicker text-gold">Locação comercial</span>
             <span className="bg-smoke/40 h-3 w-px" />
-            <span className="kicker">{site.secondRole}</span>
+            <span className="kicker">{site.region}</span>
             <span className="bg-smoke/40 hidden h-3 w-px sm:block" />
             <span className="kicker hidden sm:block">{site.creci}</span>
           </motion.div>
 
           <h1 className="font-display text-hero text-bone">
-            {["Imóveis que você", "atravessa antes"].map((line, li) => (
-              <span key={line} className="block overflow-hidden">
-                <motion.span
-                  className="block"
-                  initial={{ y: "110%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 1.3, delay: 0.95 + li * 0.11, ease: EASE }}
-                >
-                  {line}
-                </motion.span>
-              </span>
-            ))}
+            <span className="block overflow-hidden">
+              <motion.span
+                className="block"
+                initial={{ y: "110%" }}
+                animate={{ y: "0%" }}
+                transition={{ duration: 1.3, delay: 0.95, ease: EASE }}
+              >
+                Um galpão não
+              </motion.span>
+            </span>
             <span className="block overflow-hidden">
               <motion.span
                 className="text-gilded block italic"
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
-                transition={{ duration: 1.3, delay: 1.17, ease: EASE }}
+                transition={{ duration: 1.3, delay: 1.08, ease: EASE }}
               >
-                de visitar.
+                cabe numa foto.
               </motion.span>
             </span>
           </h1>
 
           <motion.p
-            className="text-mist/85 mt-8 max-w-lg text-base leading-relaxed md:text-lg"
+            className="text-mist/85 mt-8 max-w-xl text-base leading-relaxed md:text-lg"
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.35, ease: EASE }}
           >
-            Tour imersivo, fotografia de arquitetura e locação sem fricção. Em parceria
-            com a imobiliária <span className="text-bone">{site.partner.name}</span>.
+            Nove metros de pé-direito, o raio que a carreta precisa para manobrar, a força do
+            transformador. Nada disso aparece num anúncio — e é tudo que decide se o imóvel
+            serve para a sua operação.
           </motion.p>
 
           <motion.div
@@ -133,14 +139,20 @@ export function Hero({ featured }: { featured: Property }) {
             transition={{ duration: 1, delay: 1.5, ease: EASE }}
           >
             <Magnetic>
-              <ButtonLink href={`/imoveis/${featured.slug}`} variant="gold" size="lg">
-                <Play className="h-3.5 w-3.5 fill-current" strokeWidth={0} />
-                Iniciar tour
-              </ButtonLink>
+              {featured ? (
+                <ButtonLink href={`/imoveis/${featured.slug}`} variant="gold" size="lg">
+                  <Play className="h-3.5 w-3.5 fill-current" strokeWidth={0} />
+                  Ver o destaque
+                </ButtonLink>
+              ) : (
+                <ButtonLink href="/imoveis" variant="gold" size="lg" arrow>
+                  Ver a carteira
+                </ButtonLink>
+              )}
             </Magnetic>
             <Magnetic>
-              <ButtonLink href="/imoveis" variant="ghost" size="lg" arrow>
-                Ver imóveis
+              <ButtonLink href="/anuncie" variant="ghost" size="lg" arrow>
+                Tenho um imóvel
               </ButtonLink>
             </Magnetic>
           </motion.div>
@@ -148,44 +160,46 @@ export function Hero({ featured }: { featured: Property }) {
       </motion.div>
 
       {/* ── Camada 4: o cartão do imóvel em destaque ── */}
-      <motion.div
-        className="absolute right-6 bottom-8 z-30 hidden xl:block"
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.1, delay: 1.65, ease: EASE }}
-        style={{ opacity: textOpacity }}
-      >
-        <Link
-          href={`/imoveis/${featured.slug}`}
-          data-cursor="media"
-          data-cursor-label="Ver imóvel"
-          className="group border-noir-5/70 bg-noir/55 hover:border-gold/40 block w-72 rounded-sm border p-5 backdrop-blur-xl transition-colors duration-500"
+      {featured && (
+        <motion.div
+          className="absolute right-6 bottom-8 z-30 hidden xl:block"
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.1, delay: 1.65, ease: EASE }}
+          style={{ opacity: textOpacity }}
         >
-          <div className="flex items-center justify-between">
-            <span className="kicker text-gold">Em destaque</span>
-            <span className="bg-gold relative flex h-1.5 w-1.5 rounded-full">
-              <span className="bg-gold animate-pulse-ring absolute inset-0 rounded-full" />
-            </span>
-          </div>
-          <p className="font-display text-bone mt-4 text-xl leading-tight">{featured.title}</p>
-          <p className="text-smoke mt-1.5 text-xs">
-            {featured.address.district} · {featured.address.city}
-          </p>
-          <p className="text-ash mt-4 font-mono text-[10px] tracking-[0.14em] uppercase">
-            {specLine([
-              featured.bedrooms ? `${featured.bedrooms} dorm` : null,
-              featured.parking ? `${featured.parking} vagas` : null,
-              featured.area ? `${featured.area} m²` : null,
-            ])}
-          </p>
-          <p className="text-bone mt-3 font-mono text-sm">
-            {brl(featured.price)}
-            <span className="text-smoke text-[10px]">
-              {featured.purpose === "aluguel" ? " /mês" : ""}
-            </span>
-          </p>
-        </Link>
-      </motion.div>
+          <Link
+            href={`/imoveis/${featured.slug}`}
+            data-cursor="media"
+            data-cursor-label="Ver imóvel"
+            className="group border-noir-5/70 bg-noir/55 hover:border-gold/40 block w-72 rounded-sm border p-5 backdrop-blur-xl transition-colors duration-500"
+          >
+            <div className="flex items-center justify-between">
+              <span className="kicker text-gold">Em destaque</span>
+              <span className="bg-gold relative flex h-1.5 w-1.5 rounded-full">
+                <span className="bg-gold animate-pulse-ring absolute inset-0 rounded-full" />
+              </span>
+            </div>
+            <p className="font-display text-bone mt-4 text-xl leading-tight">{featured.title}</p>
+            <p className="text-smoke mt-1.5 text-xs">
+              {featured.address.district} · {featured.address.city}
+            </p>
+            <p className="text-ash mt-4 font-mono text-[10px] tracking-[0.14em] uppercase">
+              {specLine([
+                featured.area ? `${featured.area} m²` : null,
+                featured.bathrooms ? `${featured.bathrooms} banheiros` : null,
+                featured.parking ? `${featured.parking} vagas` : null,
+              ])}
+            </p>
+            <p className="text-bone mt-3 font-mono text-sm">
+              {brl(featured.price)}
+              <span className="text-smoke text-[10px]">
+                {featured.purpose === "aluguel" ? " /mês" : ""}
+              </span>
+            </p>
+          </Link>
+        </motion.div>
+      )}
 
       {/* ── Camada 5: convite a rolar ── */}
       <motion.div

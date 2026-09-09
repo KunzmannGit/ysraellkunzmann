@@ -184,8 +184,8 @@ export function LeadForm({
 
       {variant === "anuncio" && (
         <div className="grid gap-7 sm:grid-cols-3">
-          <Field label="Tipo do imóvel" name="ownerKind" placeholder="Apartamento" />
-          <Field label="Bairro / endereço" name="ownerAddress" placeholder="Bairro" />
+          <Field label="Tipo do imóvel" name="ownerKind" placeholder="Galpão" />
+          <Field label="Bairro / endereço" name="ownerAddress" placeholder="Bairro ou rodovia" />
           <Field label="Valor pretendido" name="ownerPrice" placeholder="R$" />
         </div>
       )}

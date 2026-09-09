@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
    A BIFURCACAO
 
    Quem chega no site do corretor e uma de duas pessoas:
-   procura imovel, ou tem imovel. Em vez de esconder o segundo
+   procura ponto para o negocio, ou tem imovel parado. Em vez de esconder o segundo
    num item de menu, ele ganha metade da tela.
 
    No desktop, o lado sob o cursor se abre e o outro recua —
@@ -20,25 +20,25 @@ import { cn } from "@/lib/utils";
 const PATHS = [
   {
     href: "/imoveis",
-    eyebrow: "Para quem procura",
-    title: "Quero morar",
-    line: "aqui",
-    body: "Catálogo curado, tour imersivo em cada anúncio e a verdade sobre o imóvel antes da visita.",
-    cta: "Ver imóveis disponíveis",
+    eyebrow: "Para quem procura ponto",
+    title: "Quero instalar",
+    line: "minha operação",
+    body: "Galpões, lojas, salas e terrenos na Grande Vitória. Medidas, pé-direito, acesso de carreta e energia — tudo na tela antes de você pegar a estrada.",
+    cta: "Ver a carteira",
     image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1800&q=80",
-    alt: "Interior iluminado de um apartamento",
+      "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1800&q=80",
+    alt: "Corredor de um galpão logístico com estruturas altas",
   },
   {
     href: "/anuncie",
-    eyebrow: "Para quem tem",
+    eyebrow: "Para quem tem galpão parado",
     title: "Quero alugar",
     line: "meu imóvel",
-    body: "Eu fotografo, gravo o tour, anuncio e conduzo as visitas. Você recebe o contrato pronto com garantia locatícia.",
+    body: "Eu meço, fotografo, gravo o tour e filtro quem chega. Você para de receber visita de quem nunca ia caber ali dentro.",
     cta: "Anunciar meu imóvel",
     image:
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1800&q=80",
-    alt: "Fachada de uma casa ao entardecer",
+      "https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&w=1800&q=80",
+    alt: "Área comercial ampla e vazia, pronta para ocupação",
   },
 ] as const;
 

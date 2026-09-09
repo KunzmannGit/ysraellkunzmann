@@ -218,12 +218,13 @@ export function Catalog({ properties }: { properties: Property[] }) {
           <div className="border-noir-4 flex flex-col items-center border-y py-24 text-center">
             <p className="font-display text-bone text-3xl">Nada com esse recorte.</p>
             <p className="text-ash mt-4 max-w-md leading-relaxed">
-              A carteira gira rápido e nem tudo que eu tenho está publicado. Me diga o que
-              procura e eu busco — inclusive fora do site.
+              A carteira gira rápido e nem tudo que eu tenho está publicado aqui. Me diga a
+              metragem, o pé-direito e o tipo de operação, que eu procuro — inclusive fora
+              do site.
             </p>
             <div className="mt-9 flex flex-wrap justify-center gap-4">
               <ButtonLink
-                href={waLink("Olá Ysraell, não achei no site o que procuro. Estou buscando:")}
+                href={waLink("Olá Ysraell, não achei no site o que procuro. Preciso de um imóvel com:")}
                 variant="gold"
                 arrow
               >

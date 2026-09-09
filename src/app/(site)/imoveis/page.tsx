@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Imóveis",
-  description: `Imóveis para alugar e comprar em ${site.city}, com tour imersivo em cada anúncio. Curadoria de ${site.name}.`,
+  description: `Galpões, lojas, salas e terrenos para locação na Grande Vitória, com tour imersivo em cada anúncio. Curadoria de ${site.name}.`,
   alternates: { canonical: "/imoveis" },
 };
 
@@ -21,9 +21,9 @@ export default async function ImoveisPage() {
     <>
       <PageHero
         kicker="Catálogo"
-        title="O que está"
-        accent="disponível agora."
-        lede="Cada imóvel foi visitado, fotografado e gravado por mim. O que você vê no tour é o que existe — inclusive o que costuma ficar fora da foto."
+        title="Galpões, lojas"
+        accent="e terrenos."
+        lede="Cada imóvel foi medido, fotografado e gravado por mim. O que você vê no tour é o que existe — inclusive o que costuma ficar fora da foto."
       />
       <Catalog properties={properties} />
     </>

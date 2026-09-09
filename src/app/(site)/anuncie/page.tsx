@@ -17,48 +17,48 @@ export const metadata: Metadata = {
 const DELIVERABLES = [
   {
     icon: Camera,
-    title: "Ensaio fotográfico",
-    body: "Vou ao imóvel com equipamento próprio e fotografo no melhor horário de luz. Sem grande-angular mentirosa que faz sala de 12 m² parecer 30.",
+    title: "Medição e ensaio",
+    body: "Vou com trena e câmera. Pé-direito, vão entre pilares, largura de portão, carga elétrica. Sem grande-angular mentirosa — quem chega já sabe o que vai encontrar.",
   },
   {
     icon: ScanEye,
     title: "Tour imersivo",
-    body: "Gravo o walkthrough completo e monto o tour que o interessado percorre no navegador, sem app e sem cadastro.",
+    body: "Gravo o walkthrough completo e monto o tour que o interessado percorre no navegador, sem app e sem cadastro. Ele mede o seu galpão sem sair da empresa dele.",
   },
   {
     icon: Users,
     title: "Triagem de interessados",
-    body: "Quem chega na visita já viu tudo. Isso corta em massa o curioso e o que ia desistir na porta — você recebe menos gente e gente melhor.",
+    body: "Quem chega na visita já percorreu o imóvel inteiro. Corta o curioso e corta quem nunca ia caber ali — você recebe menos gente e gente com operação compatível.",
   },
   {
     icon: KeyRound,
     title: "Visitas acompanhadas",
-    body: "Eu levo a chave e conduzo. Você não precisa estar presente nem ceder cópia para desconhecido.",
+    body: "Eu levo a chave e conduzo. Você não precisa parar o seu dia nem ceder cópia para desconhecido.",
   },
   {
     icon: FileCheck2,
     title: "Contrato e garantia",
-    body: `Análise de crédito, seguro-fiança ou caução, vistoria com laudo fotografado e contrato registrado — tudo pela ${site.partner.name}.`,
+    body: `Análise de crédito da empresa, seguro-fiança ou caução, vistoria com laudo fotografado e contrato registrado — tudo pela ${site.partner.name}.`,
   },
   {
     icon: Clock,
     title: "Retorno em 24h",
-    body: "Você sabe quantas pessoas viram o anúncio, quantas fizeram o tour inteiro e o que perguntaram. Relatório real, não 'tá difícil o mercado'.",
+    body: "Você sabe quantas empresas viram o anúncio, quantas percorreram o tour inteiro e o que perguntaram. Relatório real, não 'tá difícil o mercado'.",
   },
 ] as const;
 
 const COMPARISON = [
   {
-    usual: "Seis fotos tiradas de celular, contra a luz",
-    mine: "Ensaio no horário certo + tour imersivo completo",
+    usual: "Seis fotos de canto, sem uma medida sequer",
+    mine: "Pé-direito, vão, portão e carga elétrica documentados",
   },
   {
-    usual: "Anúncio idêntico ao dos outros trinta imóveis",
-    mine: "Um texto que conta o que o imóvel tem de específico",
+    usual: "Campo de quarto e banheiro num galpão de mil metros",
+    mine: "A ficha que um empresário realmente lê antes de decidir",
   },
   {
-    usual: "Doze visitas, onze delas sem nenhuma chance",
-    mine: "Três visitas de quem já percorreu o imóvel inteiro",
+    usual: "Doze visitas, onze de quem nunca ia caber ali",
+    mine: "Três visitas de empresas com operação compatível",
   },
   {
     usual: "Você descobre o andamento perguntando",
@@ -71,9 +71,9 @@ export default function AnunciePage() {
     <>
       <PageHero
         kicker="Para proprietários"
-        title="Seu imóvel merece mais"
-        accent="que seis fotos tortas."
-        lede="Se você tem um imóvel parado, o problema raramente é o preço. É que ninguém consegue imaginar morar nele antes de ver. Eu resolvo exatamente isso."
+        title="Galpão parado não"
+        accent="é preço alto. É dúvida."
+        lede="Quem procura ponto não desiste do seu imóvel por causa do valor. Desiste porque não consegue saber, do escritório, se a operação dele cabe ali dentro. Enquanto essa dúvida existir, o galpão continua vazio."
       >
         <div className="mt-11 flex flex-wrap gap-4">
           <ButtonLink href="#cadastrar" variant="gold" size="lg" arrow>
@@ -92,8 +92,8 @@ export default function AnunciePage() {
       {/* ══ Faixa de imagem ══ */}
       <section className="relative h-[42svh] min-h-[18rem] overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2400&q=82"
-          alt="Pátio interno de uma casa em fim de tarde"
+          src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2400&q=82"
+          alt="Galpão em plena operação logística"
           fill
           sizes="100vw"
           className="object-cover"
@@ -183,9 +183,9 @@ export default function AnunciePage() {
             </h2>
             <Reveal delay={0.2}>
               <p className="text-ash mt-7 max-w-md leading-relaxed">
-                Preencha o que souber agora — o resto eu levanto na visita. Respondo em
+                Preencha o que souber agora — as medidas eu levanto na visita. Respondo em
                 até 24 horas com uma avaliação honesta de valor e prazo, mesmo que a
-                resposta seja &ldquo;seu preço está acima do que o bairro paga&rdquo;.
+                resposta seja &ldquo;esse preço está acima do que a região paga hoje&rdquo;.
               </p>
             </Reveal>
             <Reveal delay={0.3}>

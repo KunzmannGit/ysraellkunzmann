@@ -13,6 +13,7 @@ export const KINDS = [
   "cobertura",
   "studio",
   "sala-comercial",
+  "loja",
   "galpao",
   "terreno",
 ] as const;
@@ -24,6 +25,7 @@ export const KIND_LABEL: Record<Kind, string> = {
   cobertura: "Cobertura",
   studio: "Studio",
   "sala-comercial": "Sala comercial",
+  loja: "Loja",
   galpao: "Galpão",
   terreno: "Terreno",
 };

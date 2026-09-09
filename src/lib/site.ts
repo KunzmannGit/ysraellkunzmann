@@ -33,9 +33,9 @@ export const site = {
   reach:
     "Baseado em Vila Velha, atendendo toda a Grande Vitória. Para negócios que justifiquem, vou a qualquer lugar do Brasil.",
 
-  tagline: "Imóveis que você atravessa antes de visitar.",
+  tagline: "Um galpão não cabe numa foto.",
   description:
-    "Corretor de imóveis em Vila Velha e Grande Vitória. Tours imersivos, fotografia de arquitetura e locação sem fricção — em parceria com a imobiliária Platina e Diamante.",
+    "Locação de imóveis comerciais na Grande Vitória: galpões, lojas, salas e terrenos. Tour imersivo em cada anúncio, com pé-direito, acesso de carreta e infraestrutura elétrica na tela antes da visita. Em parceria com a imobiliária Platina e Diamante.",
 
   partner: {
     name: "Platina e Diamante",
