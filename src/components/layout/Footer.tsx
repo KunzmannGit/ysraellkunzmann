@@ -2,6 +2,7 @@ import Link from "next/link";
 import { nav, site, waLink } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/Button";
 import { Hairline, Reveal, WordReveal } from "@/components/ui/Reveal";
+import { AdminLink } from "@/components/layout/AdminLink";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -128,9 +129,11 @@ export function Footer() {
           <span>
             © {year} {site.name}
           </span>
-          <span className="text-smoke/70">
-            Projetado e construído por Ysraell Kunzmann
-          </span>
+          <div className="flex items-center gap-6">
+            {/* Só aparece para quem já está autenticado. Ver AdminLink. */}
+            <AdminLink />
+            <span className="text-smoke/70">Projetado e construído por Ysraell Kunzmann</span>
+          </div>
         </div>
       </div>
     </footer>
