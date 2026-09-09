@@ -43,3 +43,6 @@ yarn-error.log*
 # supabase cli: estado local do projeto ligado.
 # O pooler-url daqui carrega a string de conexao do banco.
 /supabase/.temp
+
+# saida do gerador de flythrough (video gerado por IA, nao vai para o repo)
+/flythrough
