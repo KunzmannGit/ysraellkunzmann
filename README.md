@@ -21,13 +21,14 @@ Tudo open source, tudo em camada gratuita.
 
 1. [Rodar na sua máquina](#1-rodar-na-sua-máquina)
 2. [Colocar seus dados reais](#2-colocar-seus-dados-reais)
-3. [Ligar o Supabase](#3-ligar-o-supabase)
-4. [Publicar na Vercel](#4-publicar-na-vercel)
-5. [Apontar o domínio (Porkbun → Cloudflare → Vercel)](#5-apontar-o-domínio)
-6. [Cadastrar um imóvel](#6-cadastrar-um-imóvel)
-7. [Gravar e preparar o vídeo do tour](#7-gravar-e-preparar-o-vídeo-do-tour)
-8. [Mapa do projeto](#8-mapa-do-projeto)
-9. [Decisões que valem explicação](#9-decisões-que-valem-explicação)
+3. [Criar o e-mail do domínio](#3-criar-o-e-mail-do-domínio)
+4. [Ligar o Supabase](#4-ligar-o-supabase)
+5. [Publicar na Vercel](#5-publicar-na-vercel)
+6. [Apontar o domínio (Porkbun → Cloudflare → Vercel)](#6-apontar-o-domínio)
+7. [Cadastrar um imóvel](#7-cadastrar-um-imóvel)
+8. [Gravar e preparar o vídeo do tour](#8-gravar-e-preparar-o-vídeo-do-tour)
+9. [Mapa do projeto](#9-mapa-do-projeto)
+10. [Decisões que valem explicação](#10-decisões-que-valem-explicação)
 
 ---
 
@@ -83,24 +84,73 @@ em `src/app/(site)/sobre/page.tsx`.
 
 ---
 
-## 3. Ligar o Supabase
+## 3. Criar o e-mail do domínio
+
+`contato@ysraellkunzmann.com` não vem junto com o domínio — é um serviço à parte.
+Duas opções gratuitas, e a diferença entre elas é **uma só**: dá para *enviar*
+como `contato@`, ou só *receber*?
+
+| | Cloudflare Email Routing | **Zoho Mail Free** |
+|---|---|---|
+| Preço | Grátis | Grátis (até 5 contas, 5 GB cada) |
+| Receber em `contato@` | Sim | Sim |
+| **Responder como `contato@`** | **Não** — sai do Hotmail | **Sim** |
+| Onde você lê | Na sua caixa do Hotmail | Webmail + app Zoho Mail |
+| Instalação | ~3 min | ~15 min |
+
+**Recomendo o Zoho.** O motivo é o negócio, não a técnica: um cliente escreve
+para `contato@ysraellkunzmann.com` e recebe a resposta de `ouro.imoveis@hotmail.com`.
+Isso derruba exatamente a credibilidade que o site está construindo. Um site com
+tour imersivo e uma resposta de Hotmail não combinam.
+
+> As duas usam registros **MX**, e um domínio só tem um conjunto de MX.
+> **São mutuamente exclusivas** — escolha uma.
+
+### 3.A — Zoho Mail Free (recomendado)
+
+1. [zoho.com/mail](https://www.zoho.com/mail/) → **Sign Up Free** → role até o
+   **Forever Free Plan** (é discreto, abaixo dos planos pagos).
+2. Escolha *Sign up with a domain I already own* → `ysraellkunzmann.com`.
+3. O Zoho pede para provar que o domínio é seu com um registro **TXT**. Crie no
+   Cloudflare, em **DNS → Records**, com os valores que o Zoho mostrar.
+4. Verificado, crie a conta `contato`.
+5. O Zoho entrega os **MX** dele. No Cloudflare, apague os MX que existirem e
+   crie os três do Zoho, todos com a nuvem **cinza**.
+6. Adicione também o **SPF** e o **DKIM** que ele indicar. Sem eles seu e-mail
+   cai no spam — e um corretor no spam é um corretor invisível.
+7. Aplicativo **Zoho Mail** no celular, e está pronto.
+
+### 3.B — Cloudflare Email Routing (mais rápido, só recebe)
+
+1. No Cloudflare, painel do domínio → **Email → Email Routing** → **Get started**.
+2. Ele cria os MX sozinho. Aceite.
+3. **Create address**: `contato@ysraellkunzmann.com` → encaminhar para
+   `ouro.imoveis@hotmail.com`.
+4. Confirme o e-mail de verificação que chega no Hotmail.
+
+Nas duas, o site já está pronto: `src/lib/site.ts` aponta para `contato@` e
+mantém `ouro.imoveis@hotmail.com` como alternativa visível na página de contato.
+
+---
+
+## 4. Ligar o Supabase
 
 O banco guarda os imóveis, os contatos recebidos e as fotos. Enquanto ele não
 existir, o site funciona — mas o `/admin` fica inativo e os formulários mandam a
 pessoa para o WhatsApp com a mensagem já escrita.
 
-**3.1** Crie um projeto em [supabase.com](https://supabase.com) (plano Free).
+**5.1** Crie um projeto em [supabase.com](https://supabase.com) (plano Free).
 Guarde a senha do banco.
 
-**3.2** No projeto: **SQL Editor → New query**. Cole o conteúdo inteiro de
+**5.2** No projeto: **SQL Editor → New query**. Cole o conteúdo inteiro de
 `supabase/migrations/0001_init.sql` e execute. Isso cria as tabelas `properties`
 e `leads`, as políticas de segurança e o bucket de arquivos `midia`.
 
-**3.3** Crie seu usuário: **Authentication → Users → Add user**. Marque
+**5.3** Crie seu usuário: **Authentication → Users → Add user**. Marque
 *Auto Confirm User*. Esse será o login do painel — **não existe cadastro aberto no
 site**, de propósito.
 
-**3.4** Copie as chaves em **Project Settings → Data API** e crie um arquivo
+**5.4** Copie as chaves em **Project Settings → Data API** e crie um arquivo
 `.env.local` na raiz:
 
 ```bash
@@ -108,7 +158,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
 ```
 
-**3.5** Reinicie o `npm run dev` e acesse `http://localhost:3000/admin`.
+**4.5** Reinicie o `npm run dev` e acesse `http://localhost:3000/admin`.
 
 > **Sobre a chave `anon` no navegador:** ela é pública por design. Quem protege os
 > dados são as políticas RLS da migração: um visitante anônimo só **lê** imóveis
@@ -117,7 +167,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...
 
 ---
 
-## 4. Publicar na Vercel
+## 5. Publicar na Vercel
 
 **4.1** Suba o código para o GitHub:
 
@@ -140,12 +190,12 @@ os ambientes *Production*, *Preview* e *Development*.
 
 ---
 
-## 5. Apontar o domínio
+## 6. Apontar o domínio
 
 Fluxo: o **Porkbun** continua sendo o registrador, o **Cloudflare** passa a ser o
 DNS, e o DNS aponta para a **Vercel**.
 
-### 5.1 Cloudflare assume o DNS
+### 6.1 Cloudflare assume o DNS
 
 1. Crie conta no [Cloudflare](https://dash.cloudflare.com) → **Add a site** →
    `ysraellkunzmann.com` → plano **Free**.
@@ -155,7 +205,7 @@ DNS, e o DNS aponta para a **Vercel**.
    Nameservers → Edit**. Apague os do Porkbun e cole os dois do Cloudflare.
 4. A propagação costuma levar de minutos a algumas horas.
 
-### 5.2 Vercel entrega os registros
+### 6.2 Vercel entrega os registros
 
 1. No projeto da Vercel: **Settings → Domains → Add** → `ysraellkunzmann.com`.
    Adicione também `www.ysraellkunzmann.com`.
@@ -166,7 +216,7 @@ DNS, e o DNS aponta para a **Vercel**.
    - um registro **A** em `@` apontando para o IP indicado;
    - um **CNAME** em `www` apontando para o host indicado.
 
-### 5.3 O detalhe que quebra tudo
+### 6.3 O detalhe que quebra tudo
 
 > **Deixe a nuvem CINZA (DNS only), não laranja.**
 >
@@ -178,7 +228,7 @@ DNS, e o DNS aponta para a **Vercel**.
 > Se ainda assim quiser o proxy ligado, o SSL do Cloudflare **precisa** estar em
 > **Full (strict)**. Fora isso, mantenha cinza.
 
-### 5.4 Fechar
+### 6.4 Fechar
 
 Em **SSL/TLS → Overview**, escolha **Full (strict)**. Espere a Vercel marcar os
 domínios como *Valid Configuration* e defina qual é o principal (recomendo o apex,
@@ -186,7 +236,7 @@ domínios como *Valid Configuration* e defina qual é o principal (recomendo o a
 
 ---
 
-## 6. Cadastrar um imóvel
+## 7. Cadastrar um imóvel
 
 1. Entre em `/admin` (login em `/entrar`).
 2. **Novo imóvel**.
@@ -209,7 +259,7 @@ espere o cache expirar.
 
 ---
 
-## 7. Gravar e preparar o vídeo do tour
+## 8. Gravar e preparar o vídeo do tour
 
 **Na gravação:** caminhe devagar e sem parar, celular na horizontal, na altura do
 peito, movimento contínuo. Um plano só por imóvel. Comece pela porta de entrada e
@@ -246,7 +296,7 @@ Envie pelo `/admin`, na seção **Tour → Vídeo walkthrough**.
 
 ---
 
-## 8. Mapa do projeto
+## 9. Mapa do projeto
 
 ```
 src/
@@ -284,7 +334,7 @@ supabase/migrations/            SQL do banco
 
 ---
 
-## 9. Decisões que valem explicação
+## 10. Decisões que valem explicação
 
 **O site nunca depende do banco para estar no ar.** `lib/properties.ts` tenta o
 Supabase e, se ele não responder, serve o catálogo semente. Um site de corretor no
