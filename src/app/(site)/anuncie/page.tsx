@@ -10,7 +10,7 @@ import { Hairline, Reveal, WordReveal } from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
   title: "Anuncie seu imóvel",
-  description: `Tem um imóvel para alugar em ${site.city}? Eu fotografo, gravo o tour imersivo, anuncio e conduzo as visitas — com contrato e garantia locatícia pela ${site.partner.name}.`,
+  description: `Tem um imóvel para alugar em Vila Velha ou na Grande Vitória? Eu fotografo, gravo o tour imersivo, anuncio e conduzo as visitas — com contrato e garantia locatícia pela ${site.partner.name}.`,
   alternates: { canonical: "/anuncie" },
 };
 
@@ -190,7 +190,7 @@ export default function AnunciePage() {
             </Reveal>
             <Reveal delay={0.3}>
               <p className="text-smoke mt-8 text-sm leading-relaxed">
-                Atendo em {site.city} e região. {site.creci}.
+                {site.reach} {site.creci}.
               </p>
             </Reveal>
           </div>

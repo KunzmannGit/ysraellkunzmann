@@ -29,6 +29,14 @@ const CHANNELS = [
     note: "Melhor para documentos, propostas e o que precisa ficar registrado.",
     external: false,
   },
+  {
+    icon: Mail,
+    label: "E-mail alternativo",
+    value: site.emailAlt,
+    href: `mailto:${site.emailAlt}`,
+    note: "A caixa que já uso há anos. Chega no mesmo lugar.",
+    external: false,
+  },
 ] as const;
 
 export default function ContatoPage() {
@@ -83,9 +91,7 @@ export default function ContatoPage() {
                     <MapPin className="text-smoke mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.25} />
                     <div>
                       <p className="kicker mb-1.5">Área de atuação</p>
-                      <p className="text-ash text-sm leading-relaxed">
-                        {site.city} e região · {site.state}
-                      </p>
+                      <p className="text-ash text-sm leading-relaxed">{site.reach}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

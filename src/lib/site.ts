@@ -1,7 +1,8 @@
 /* ═══════════════════════════════════════════════════════════
    CONFIGURACAO DO SITE
-   Ysraell: tudo que e "dado seu" mora aqui. Trocou aqui,
-   trocou no site inteiro (header, footer, SEO, WhatsApp, JSON-LD).
+   Tudo que e "dado seu" mora aqui. Trocou aqui, trocou no site
+   inteiro: header, rodape, SEO, dados estruturados e todos os
+   links de WhatsApp.
    ═══════════════════════════════════════════════════════════ */
 
 export const site = {
@@ -13,17 +14,28 @@ export const site = {
   role: "Corretor de Imóveis",
   secondRole: "Engenheiro de Software",
 
-  /* TODO Ysraell: preencha com os dados reais antes de publicar */
-  creci: "CRECI-XX 00000-F",
-  phone: "+55 00 00000-0000",
-  whatsapp: "5500000000000", // so digitos, com DDI 55
+  creci: "CRECI-ES 15225-F",
+
+  phone: "(27) 99689-0805",
+  /** Só dígitos, com o DDI 55 na frente. É o que monta os links wa.me. */
+  whatsapp: "5527996890805",
+
+  /** E-mail do domínio — criar antes de publicar (ver README, seção 3). */
   email: "contato@ysraellkunzmann.com",
-  city: "Sua Cidade",
-  state: "UF",
+  /** O que já existe hoje. Fica como alternativa até o do domínio estar ativo. */
+  emailAlt: "ouro.imoveis@hotmail.com",
+
+  city: "Vila Velha",
+  state: "ES",
+  /** Onde você atua no dia a dia. */
+  region: "Grande Vitória",
+  /** Frase de alcance — aparece no rodapé e na página de contato. */
+  reach:
+    "Baseado em Vila Velha, atendendo toda a Grande Vitória. Para negócios que justifiquem, vou a qualquer lugar do Brasil.",
 
   tagline: "Imóveis que você atravessa antes de visitar.",
   description:
-    "Corretor de imóveis e engenheiro de software. Tours imersivos, fotografia de arquitetura e locação sem fricção — em parceria com a imobiliária Platina e Diamante.",
+    "Corretor de imóveis em Vila Velha e Grande Vitória. Tours imersivos, fotografia de arquitetura e locação sem fricção — em parceria com a imobiliária Platina e Diamante.",
 
   partner: {
     name: "Platina e Diamante",
@@ -35,7 +47,7 @@ export const site = {
   social: {
     instagram: "https://instagram.com/",
     linkedin: "https://linkedin.com/in/",
-    github: "https://github.com/",
+    github: "https://github.com/YsraellKunzmann",
   },
 } as const;
 

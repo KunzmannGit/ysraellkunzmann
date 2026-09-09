@@ -48,7 +48,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <p className="font-display text-bone text-2xl">Ysraell Kunzmann</p>
             <p className="text-smoke mt-2 max-w-[22rem] text-sm leading-relaxed">
-              {site.role} e {site.secondRole}. {site.city} · {site.state}.
+              {site.role} e {site.secondRole}. {site.reach}
             </p>
             <p className="kicker mt-5">{site.creci}</p>
           </div>

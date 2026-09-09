@@ -40,10 +40,10 @@ O terraço tem ponto de água, ponto de gás e uma pérgola de madeira que já s
     suites: 1,
     bathrooms: 3,
     parking: 2,
-    address: { district: "Jardim Alto", city: "Sua Cidade", state: "UF" },
+    address: { district: "Praia da Costa", city: "Vila Velha", state: "ES" },
     features: [
       "Terraço privativo 54 m²",
-      "Vista desobstruída poente",
+      "Vista desobstruída para a baía",
       "Closet integrado",
       "Piso aquecido nos banhos",
       "Churrasqueira a gás",
@@ -95,7 +95,7 @@ São três dormitórios em L ao redor desse pátio, então nenhum quarto olha pa
     suites: 1,
     bathrooms: 3,
     parking: 2,
-    address: { district: "Vila Serena", city: "Sua Cidade", state: "UF" },
+    address: { district: "Coqueiral de Itaparica", city: "Vila Velha", state: "ES" },
     features: [
       "Pátio interno com figueira",
       "Escritório com entrada independente",
@@ -136,7 +136,7 @@ São três dormitórios em L ao redor desse pátio, então nenhum quarto olha pa
 
 Marcenaria sob medida em todo o perímetro: a cama sobe, a mesa desce, e o que sobra é chão livre. Foi projetado para uma pessoa que recebe duas.
 
-Fica a quatro minutos a pé da estação. É o imóvel certo para quem chegou na cidade agora e quer decidir o bairro depois.`,
+Fica a quatro minutos a pé da orla e a dois da Rua da Lama. É o imóvel certo para quem chegou na cidade agora e quer decidir o bairro depois.`,
     purpose: "aluguel",
     kind: "studio",
     status: "publicado",
@@ -147,12 +147,12 @@ Fica a quatro minutos a pé da estação. É o imóvel certo para quem chegou na
     bedrooms: 1,
     bathrooms: 1,
     parking: 0,
-    address: { district: "Centro Histórico", city: "Sua Cidade", state: "UF" },
+    address: { district: "Praia do Canto", city: "Vitória", state: "ES" },
     features: [
       "Pé-direito 3,4 m",
       "Marcenaria planejada integral",
       "Cama retrátil",
-      "4 min a pé do metrô",
+      "4 min a pé da orla",
       "Lavanderia compartilhada no térreo",
       "Bicicletário",
       "Mobiliado",
@@ -189,7 +189,7 @@ Prédio de oito unidades, dois por andar. Vizinhança antiga, corredor silencios
     suites: 0,
     bathrooms: 2,
     parking: 1,
-    address: { district: "Bela Vista", city: "Sua Cidade", state: "UF" },
+    address: { district: "Jardim da Penha", city: "Vitória", state: "ES" },
     features: [
       "Sala de esquina com vidro em ângulo",
       "Granilite original preservado",
@@ -229,7 +229,7 @@ Edifício com fibra redundante de duas operadoras, gerador e recepção das 7h �
     bedrooms: null,
     bathrooms: 2,
     parking: 2,
-    address: { district: "Distrito Financeiro", city: "Sua Cidade", state: "UF" },
+    address: { district: "Enseada do Suá", city: "Vitória", state: "ES" },
     features: [
       "Forro acústico instalado",
       "Cabeamento de rede em todos os pontos",
@@ -268,7 +268,7 @@ Vendida com o projeto paisagístico documentado e a planta de irrigação. É um
     suites: 2,
     bathrooms: 4,
     parking: 3,
-    address: { district: "Bairro Jardim", city: "Sua Cidade", state: "UF" },
+    address: { district: "Mata da Praia", city: "Vitória", state: "ES" },
     features: [
       "Terreno 620 m²",
       "Quatro árvores adultas preservadas",
