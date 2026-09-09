@@ -53,7 +53,7 @@ Instagram e LinkedIn em `src/lib/site.ts`.
 
 1. [Rodar na sua máquina](#1-rodar-na-sua-máquina)
 2. [Seus dados no site](#2-seus-dados-no-site)
-3. [Criar o e-mail do domínio](#3-criar-o-e-mail-do-domínio)
+3. [Criar o e-mail do domínio](#3-criar-o-e-mail-do-domínio) · [usar](#3c--usar-o-contato-no-dia-a-dia) · [aviso de contato](#3d--aviso-por-e-mail-a-cada-contato-recebido)
 4. [Ligar o Supabase](#4-ligar-o-supabase)
 5. [Publicar na Vercel](#5-publicar-na-vercel)
 6. [Apontar o domínio](#6-apontar-o-domínio)
@@ -179,6 +179,73 @@ com resposta de Hotmail não combinam.
 
 Nos dois casos o site já está pronto: aponta para `contato@` e mantém
 `ouro.imoveis@hotmail.com` visível como alternativa na página de contato.
+
+---
+
+## 3.C — Usar o contato@ no dia a dia
+
+Depois de criado no Zoho:
+
+| Onde | Como |
+|---|---|
+| Celular | App **Zoho Mail** (iOS/Android) |
+| Computador | **mail.zoho.com** pelo navegador |
+| Outlook/Gmail por IMAP | O plano gratuito costuma **não** liberar IMAP/POP. Confira antes de contar com isso. |
+
+**Não fique com duas caixas.** No Zoho, em **Settings → Mail Accounts → Email
+Forwarding**, encaminhe uma cópia para `ouro.imoveis@hotmail.com` e marque para
+manter a original. Assim você **lê tudo no Hotmail**, como já faz, e só abre o
+Zoho quando for **responder** um cliente — que é a única parte em que o remetente
+importa.
+
+---
+
+## 3.D — Aviso por e-mail a cada contato recebido
+
+Todo contato do site já aparece no `/admin`. Para também chegar um e-mail:
+
+**Por que num subdomínio.** Um domínio só pode ter **um** registro SPF. Se o Zoho
+publicar o dele em `ysraellkunzmann.com` e o serviço de envio publicar outro, os
+dois se anulam e o seu e-mail passa a cair no spam. Separando os papéis, cada um
+tem o próprio SPF e não há conflito:
+
+```
+ysraellkunzmann.com        Zoho     você lendo e respondendo cliente
+send.ysraellkunzmann.com   Resend   o site avisando você
+```
+
+**Passo a passo**
+
+1. [resend.com](https://resend.com) → conta gratuita (3.000 e-mails/mês, 100/dia —
+   sobra muito para um site de corretor).
+2. **Domains → Add Domain** → digite **`send.ysraellkunzmann.com`**, e não o
+   domínio principal.
+3. O Resend entrega registros **TXT** (SPF e DKIM) e um **MX**. Crie todos no
+   Cloudflare com a nuvem **cinza**. Repare que o `Name` deles termina em `.send`
+   — é isso que mantém tudo separado do Zoho.
+4. Espere ficar **Verified**.
+5. **API Keys → Create API Key**, permissão *Sending access*.
+6. Grave a chave:
+
+```bash
+npx vercel env add RESEND_API_KEY production --type secret
+```
+
+Repita para `preview` e `development`, e refaça o deploy.
+
+Não precisa mexer em `LEAD_NOTIFY_FROM` nem `LEAD_NOTIFY_TO`: sem elas o site já
+envia de `site@send.ysraellkunzmann.com` para os dois endereços de
+`src/lib/site.ts`.
+
+**Como o aviso se comporta**
+
+- Chega para `contato@ysraellkunzmann.com` **e** `ouro.imoveis@hotmail.com`.
+- O **Reply-To** aponta para quem escreveu: responder na sua caixa já vai direto
+  para o cliente, sem copiar endereço.
+- Se o banco estiver fora no momento, o e-mail avisa em destaque que **ele é o
+  único registro** daquele contato.
+- Se o Resend estiver fora, **o contato não se perde**: já foi gravado no banco e
+  está no `/admin`.
 
 ---
 
