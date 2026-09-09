@@ -18,6 +18,26 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "motion"],
   },
+  async redirects() {
+    // Um endereco canonico, sempre.
+    //
+    // Sem isto, ysraellkunzmann.com e www.ysraellkunzmann.com servem o
+    // mesmo site com status 200 nos dois — e o Google trata como duas
+    // paginas concorrentes, dividindo a autoridade do dominio entre elas.
+    // A tag canonical ajuda, mas redirecionar de verdade e o que resolve.
+    //
+    // Fica aqui, e nao no painel da Vercel, para viver junto do codigo:
+    // versionado, revisavel e portavel se um dia a hospedagem mudar.
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.ysraellkunzmann.com" }],
+        destination: "https://ysraellkunzmann.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {
