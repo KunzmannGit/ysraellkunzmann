@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════
+   YSRAELL KUNZMANN · DESIGN SYSTEM "NOIR CINEMATICO"
+   Preto profundo, luz de ouro, didone + grao de filme.
+   Regra mae: a tela e escura para que o imovel seja a unica luz.
+   ═══════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* ─── Cor: escala do escuro ─── */
+  --color-void: #030205;
+  --color-noir: #08070a;
+  --color-noir-2: #0c0a10;
+  --color-noir-3: #121017;
+  --color-noir-4: #1a1720;
+  --color-noir-5: #272130;
+
+  /* ─── Cor: escala do neutro ─── */
+  --color-smoke: #4a4453;
+  --color-ash: #8b8496;
+  --color-mist: #c4bfcd;
+  --color-bone: #ede9f2;
+
+  /* ─── Cor: o ouro (a unica cor de marca) ─── */
+  --color-gold-deep: #7d6212;
+  --color-gold: #c9a227;
+  --color-gold-lit: #e7c65b;
+  --color-gold-pale: #f6e9b8;
+
+  /* ─── Semanticas ─── */
+  --color-ember: #c2410c;
+  --color-jade: #15803d;
+
+  /* ─── Tipografia ─── */
+  --font-display: var(--font-bodoni), "Didot", "Bodoni MT", Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jb), ui-monospace, "SFMono-Regular", "Courier New", monospace;
+
+  --text-colossus: clamp(3.5rem, 15vw, 15rem);
+  --text-hero: clamp(2.5rem, 7.3vw, 7.75rem);
+  --text-display: clamp(2.25rem, 5.5vw, 5rem);
+  --text-title: clamp(1.75rem, 3.4vw, 3rem);
+  --text-lede: clamp(1.05rem, 1.7vw, 1.5rem);
+  --text-micro: 0.6875rem;
+
+  /* ─── Movimento ─── */
+  --ease-noir: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-breathe: breathe 18s var(--ease-noir) infinite;
+  /* A animacao do grao repinta uma camada de tela cheia ~8x por segundo.
+     Vale no desktop; no celular gasta bateria sem ninguem reparar.
+     Por isso a classe so e aplicada acima de 768px (ver .grain-layer). */
+  --animate-grain: grain 700ms steps(6) infinite;
+  --animate-sheen: sheen 3.2s var(--ease-noir) infinite;
+  --animate-pulse-ring: pulse-ring 2.6s var(--ease-noir) infinite;
+  --animate-drift: drift 26s ease-in-out infinite;
+
+  /* ─── Sombra / luz ─── */
+  --shadow-lift: 0 2px 8px -2px rgb(0 0 0 / 0.6), 0 24px 60px -12px rgb(0 0 0 / 0.85);
+  --shadow-gold: 0 0 0 1px rgb(201 162 39 / 0.25), 0 0 40px -8px rgb(201 162 39 / 0.35);
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1.06) translate3d(0, 0, 0); }
+  50%      { transform: scale(1.14) translate3d(0, -1.2%, 0); }
+}
+
+@keyframes grain {
+  0%   { transform: translate(0, 0); }
+  16%  { transform: translate(-4%, -6%); }
+  33%  { transform: translate(-8%, 3%); }
+  50%  { transform: translate(4%, -8%); }
+  66%  { transform: translate(-2%, 7%); }
+  83%  { transform: translate(6%, 2%); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes sheen {
+  0%       { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
+  38%      { opacity: 0.55; }
+  100%     { transform: translateX(220%) skewX(-18deg); opacity: 0; }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(0.85); opacity: 0.9; }
+  70%  { transform: scale(1.9); opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%      { transform: translate3d(2%, -3%, 0) rotate(1.5deg); }
+}
+
+/* ═══════════════════════════ BASE ═══════════════════════════ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: color-mix(in oklab, var(--color-noir-5) 70%, transparent);
+  }
+
+  html {
+    background-color: var(--color-noir);
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Lenis controla o scroll; smooth nativo brigaria com ele. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    background-color: var(--color-noir);
+    color: var(--color-mist);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    font-variant-ligatures: contextual;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-gold) 85%, black);
+    color: var(--color-noir);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Scrollbar discreta — some no noir, aparece no hover */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--color-noir); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-noir-4);
+    border: 3px solid var(--color-noir);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-gold-deep); }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    color: var(--color-bone);
+    text-wrap: balance;
+  }
+
+  input, textarea, select, button {
+    font: inherit;
+    color: inherit;
+  }
+
+  video {
+    display: block;
+  }
+}
+
+/* ═══════════════════════ UTILITARIOS ═══════════════════════ */
+
+@utility container-noir {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  max-width: 88rem;
+  @media (width >= 48rem) { padding-inline: 2.5rem; }
+  @media (width >= 80rem) { padding-inline: 4rem; }
+}
+
+/* Kicker: rotulo tecnico em mono, o "carimbo de engenheiro" */
+@utility kicker {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-smoke);
+}
+
+/* Texto com o ouro escorrendo por dentro */
+@utility text-gilded {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-gold-deep) 0%,
+    var(--color-gold-pale) 38%,
+    var(--color-gold) 62%,
+    var(--color-gold-deep) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Regua fina que desenha da esquerda pra direita */
+@utility hairline {
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in oklab, var(--color-gold) 55%, transparent),
+    transparent
+  );
+}
+
+/* Vinheta de cinema: escurece as bordas, foca o centro */
+@utility vignette {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 90% at 50% 45%, transparent 40%, rgb(3 2 5 / 0.55) 78%, rgb(3 2 5 / 0.92) 100%);
+  }
+}
+
+/* Sobe do preto: gradiente que apoia legenda sobre foto */
+@utility scrim-b {
+  background-image: linear-gradient(
+    to top,
+    var(--color-noir) 0%,
+    color-mix(in oklab, var(--color-noir) 82%, transparent) 24%,
+    transparent 62%
+  );
+}
+
+/* Texto que fica POR CIMA de foto: sombra dupla curta.
+   Uma sombra larga borra; duas curtas dao contorno sem sujar. */
+@utility on-photo {
+  text-shadow:
+    0 1px 2px rgb(0 0 0 / 0.65),
+    0 2px 12px rgb(0 0 0 / 0.45);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* ═══════════════════ COMPORTAMENTO GLOBAL ═══════════════════ */
+
+/* Cursor customizado: so em ponteiro fino, e so quando o JS confirma */
+body.has-custom-cursor,
+body.has-custom-cursor * {
+  cursor: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain-layer { display: none; }
+}
