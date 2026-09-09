@@ -255,6 +255,31 @@
 
 /* ═══════════════════ COMPORTAMENTO GLOBAL ═══════════════════ */
 
+/*
+  Rede de seguranca da cortina de abertura.
+
+  A cortina e removida pelo React. Se o JavaScript nao chegar a rodar
+  — bundle quebrado, rede caindo no meio, extensao bloqueando, celular
+  antigo engasgando — ela ficaria para sempre e o site seria uma tela
+  preta. O <noscript> do layout raiz so cobre "JS desligado", nao
+  "JS falhou".
+
+  Entao ela se mata sozinha, em CSS puro, aos 6 segundos. No caminho
+  normal o React ja a desmontou aos ~3s e esta animacao nunca aparece.
+  Uma abertura bonita nunca pode custar o site inteiro.
+*/
+#yk-preloader {
+  animation: preloader-failsafe 900ms linear 6s forwards;
+}
+
+@keyframes preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+
 /* Cursor customizado: so em ponteiro fino, e so quando o JS confirma */
 body.has-custom-cursor,
 body.has-custom-cursor * {
