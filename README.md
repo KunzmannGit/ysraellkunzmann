@@ -55,6 +55,18 @@ mexer em infraestrutura.
 | `npm run typecheck` | TypeScript sem emitir |
 | `npm run lint` | ESLint |
 | `node scripts/configurar.mjs` | Grava as chaves do Supabase (local + Vercel) |
+| `npm run login` | Autentica nas duas CLIs (Vercel e Supabase) |
+| `npm run vc -- <cmd>` | Vercel CLI |
+| `npm run sb -- <cmd>` | Supabase CLI |
+
+> As duas CLIs sao chamadas por script npm de proposito: o `npm run` coloca
+> `node_modules/.bin` no PATH sozinho, e assim funcionam sem depender do PATH do
+> Windows — que teima em servir uma copia velha do ambiente para terminais novos.
+>
+> O Supabase nao suporta instalacao global via npm, entao ele e dependencia do
+> projeto. O Vercel foi instalado com `npm i --no-save vercel`, para nao entrar no
+> `package.json` e nao ser reinstalado a cada build na Vercel. Se um dia voce
+> apagar o `node_modules`, rode `npm i --no-save vercel` de novo.
 
 ---
 

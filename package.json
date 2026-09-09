@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "db:types": "supabase gen types typescript --linked > src/lib/supabase/database.types.ts",
     "login": "vercel login && supabase login",
-    "sb": "supabase"
+    "sb": "supabase",
+    "vc": "vercel"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
