@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, ExternalLink, Loader2, Plus, Trash2, X } from "lucide-react";
 
 import type { Kind, Media, Purpose, Status, Tour, TourChapter } from "@/lib/types";
@@ -256,17 +256,8 @@ function Toggle({
 
 /* ── Editor ── */
 
-export function PropertyEditor({
-  initial,
-  id,
-}: {
-  /** Linha do banco, quando editando. `null` cria um novo. */
-  initial: Record<string, unknown> | null;
-  id: string | null;
-}) {
-  const router = useRouter();
-
-  const [draft, setDraft] = useState<DraftState>(() => {
+/** Traduz a linha do banco para o rascunho editável na tela. */
+function montarDraft(initial: Record<string, unknown> | null): DraftState {
     if (!initial) return EMPTY;
     const r = initial as Record<string, never>;
     const asText = (v: unknown) => (v == null ? "" : String(v));
@@ -300,7 +291,42 @@ export function PropertyEditor({
       gallery: (r.gallery as unknown as Media[]) ?? [],
       tour: (r.tour as unknown as Tour) ?? null,
     };
-  });
+}
+
+
+export function PropertyEditor({
+  initial,
+  id,
+}: {
+  /** Linha do banco, quando editando. `null` cria um novo. */
+  initial: Record<string, unknown> | null;
+  id: string | null;
+}) {
+  const router = useRouter();
+
+  const [draft, setDraft] = useState<DraftState>(() => montarDraft(initial));
+
+  /**
+   * Alteração pendente.
+   *
+   * Mexer nas fotos, marcar a capa ou trocar um campo só altera a
+   * tela — nada vai para o banco antes do Salvar. Sem um aviso, a
+   * edição parece ter funcionado e some ao recarregar. Aconteceu de
+   * verdade: capa trocada e fotos removidas se perderam assim.
+   *
+   * `gravado` guarda o retrato do que está no banco, e é atualizado
+   * a cada salvamento bem-sucedido.
+   */
+  const [gravado, setGravado] = useState(() => JSON.stringify(montarDraft(initial)));
+  const pendente = JSON.stringify(draft) !== gravado;
+
+  // Fechar a aba com alteração pendente pede confirmação ao navegador.
+  useEffect(() => {
+    if (!pendente) return;
+    const aviso = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", aviso);
+    return () => window.removeEventListener("beforeunload", aviso);
+  }, [pendente]);
 
   const [featureInput, setFeatureInput] = useState("");
   const [saving, setSaving] = useState(false);
@@ -415,6 +441,7 @@ export function PropertyEditor({
 
     await revalidar(payload.slug);
 
+    setGravado(JSON.stringify(draft));
     setMessage({ tone: "ok", text: "Salvo e publicado." });
     router.refresh();
     if (!id && data?.id) router.replace(`/admin/imoveis/${data.id}`);
@@ -453,7 +480,14 @@ export function PropertyEditor({
           </div>
 
           <div className="flex items-center gap-3">
-            {message && (
+            {pendente && !saving && (
+              <span className="text-ember flex items-center gap-2 font-mono text-[10px] tracking-[0.16em] uppercase">
+                <span className="bg-ember h-1.5 w-1.5 animate-pulse rounded-full" />
+                Alterações não salvas
+              </span>
+            )}
+
+            {message && !pendente && (
               <span
                 className={cn(
                   "font-mono text-[10px] tracking-[0.16em] uppercase",
@@ -492,10 +526,13 @@ export function PropertyEditor({
               type="button"
               onClick={save}
               disabled={saving}
-              className="bg-gold text-noir hover:bg-gold-lit inline-flex h-11 items-center gap-2 rounded-full px-6 font-mono text-[10px] font-medium tracking-[0.18em] uppercase transition-colors duration-400 disabled:opacity-50"
+              className={cn(
+                "bg-gold text-noir hover:bg-gold-lit inline-flex h-11 items-center gap-2 rounded-full px-6 font-mono text-[10px] font-medium tracking-[0.18em] uppercase transition-all duration-400 disabled:opacity-50",
+                pendente && "ring-ember/60 shadow-lg ring-2",
+              )}
             >
               {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={1.5} />}
-              {saving ? "Salvando…" : "Salvar"}
+              {saving ? "Salvando…" : pendente ? "Salvar alterações" : "Salvar"}
             </button>
           </div>
         </div>
