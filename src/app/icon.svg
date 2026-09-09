@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    Monograma YK.
+
+    Desenhado como tracos geometricos, e nao com uma fonte: a aba do
+    navegador renderiza isto a 16 px, e nesse tamanho serifa vira
+    sujeira. Traco limpo continua legivel; Bodoni de verdade viraria
+    um borrao dourado.
+
+    O contorno tambem nao depende de fonte instalada — o mesmo
+    arquivo desenha igual em qualquer sistema.
+  -->
+  <rect width="64" height="64" rx="14" fill="#08070A"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.25" fill="none"
+        stroke="#C9A227" stroke-opacity="0.28" stroke-width="1.5"/>
+  <g fill="none" stroke="#C9A227" stroke-width="4.2"
+     stroke-linecap="square" stroke-linejoin="miter">
+    <!-- Y -->
+    <path d="M11 19 L20 31"/>
+    <path d="M29 19 L20 31"/>
+    <path d="M20 31 L20 46"/>
+    <!-- K -->
+    <path d="M37 19 L37 46"/>
+    <path d="M37 33 L52 19"/>
+    <path d="M37 33 L52 46"/>
+  </g>
+</svg>
