@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Loader2, Plus } from "lucide-react";
-import { useNow } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 const fieldClass =
@@ -29,23 +28,27 @@ function Field({
 /**
  * Formulário de novo compromisso.
  *
+ * O dia já vem escolhido — quem decide a data é o clique no
+ * calendário, não este formulário. Ele só pergunta hora, título e
+ * o resto, o que também elimina qualquer leitura de relógio aqui
+ * dentro (nada de `Date.now()` impuro no meio do render).
+ *
  * Passa pela rota /api/agenda em vez de escrever direto no banco
  * pelo cliente do navegador, porque criar precisa disparar o
  * e-mail de confirmação — e a chave do Resend é secreta, só existe
  * no servidor.
  */
-export function AppointmentForm({ onCreated }: { onCreated: () => void }) {
+export function AppointmentForm({
+  date,
+  onCreated,
+}: {
+  /** Dia já escolhido no calendário, formato AAAA-MM-DD. */
+  date: string;
+  onCreated: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Data padrão: amanhã, como palpite razoável para não abrir o
-  // formulário todo vazio. `agora` é `null` no primeiro quadro (ver
-  // useNow); até lá o campo fica sem valor padrão, inofensivo por
-  // se tratar só de um preenchimento sugerido.
-  const agora = useNow();
-  const dataInicial =
-    agora === null ? "" : new Date(agora + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -53,14 +56,11 @@ export function AppointmentForm({ onCreated }: { onCreated: () => void }) {
     setError(null);
 
     const form = new FormData(event.currentTarget);
-    const data = String(form.get("data") ?? "");
     const hora = String(form.get("hora") ?? "09:00");
 
-    // Monta o instante em horário de Brasília (-03:00 fixo) e deixa
-    // o navegador converter para UTC no Date — assim o servidor
-    // recebe sempre o instante exato, sem depender do fuso de quem
-    // está com o navegador configurado diferente.
-    const startsAt = new Date(`${data}T${hora}:00-03:00`).toISOString();
+    // Horário de Brasília, -03:00 fixo (sem horário de verão desde
+    // 2019) — o navegador converte para UTC no Date.toISOString().
+    const startsAt = new Date(`${date}T${hora}:00-03:00`).toISOString();
 
     try {
       const res = await fetch("/api/agenda", {
@@ -95,7 +95,7 @@ export function AppointmentForm({ onCreated }: { onCreated: () => void }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="bg-gold text-noir hover:bg-gold-lit inline-flex h-11 items-center gap-2 rounded-full px-6 font-mono text-[10px] font-medium tracking-[0.18em] uppercase transition-colors duration-400"
+        className="border-noir-5 text-ash hover:border-gold hover:text-gold inline-flex h-10 items-center gap-2 rounded-full border border-dashed px-5 font-mono text-[10px] tracking-[0.18em] uppercase transition-colors duration-300"
       >
         <Plus className="h-3.5 w-3.5" strokeWidth={2} />
         Novo compromisso
@@ -104,42 +104,21 @@ export function AppointmentForm({ onCreated }: { onCreated: () => void }) {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="border-noir-4 bg-noir-2/40 space-y-6 rounded-sm border p-6"
-    >
+    <form onSubmit={onSubmit} className="border-noir-4 bg-noir-2/40 space-y-6 rounded-sm border p-6">
       <Field label="Título">
         <input
           name="title"
           required
           placeholder="Visita — Galpão Jardim Limoeiro"
           data-cursor="text"
+          autoFocus
           className={fieldClass}
         />
       </Field>
 
-      <div className="grid grid-cols-2 gap-6">
-        <Field label="Data">
-          <input
-            name="data"
-            type="date"
-            required
-            defaultValue={dataInicial}
-            data-cursor="text"
-            className={fieldClass}
-          />
-        </Field>
-        <Field label="Hora">
-          <input
-            name="hora"
-            type="time"
-            required
-            defaultValue="09:00"
-            data-cursor="text"
-            className={fieldClass}
-          />
-        </Field>
-      </div>
+      <Field label="Hora" className="max-w-[10rem]">
+        <input name="hora" type="time" required defaultValue="09:00" data-cursor="text" className={fieldClass} />
+      </Field>
 
       <Field label="Local (opcional)">
         <input

@@ -38,3 +38,21 @@ export function mapRange(value: number, inMin: number, inMax: number, outMin: nu
 export function specLine(parts: Array<string | null | undefined | false>) {
   return parts.filter(Boolean).join(" · ");
 }
+
+/**
+ * Converte um instante (ISO, UTC) para a data-calendário em
+ * horário de Brasília, no formato "AAAA-MM-DD".
+ *
+ * Existe porque "que dia é" depende do fuso de quem pergunta: um
+ * compromisso às 23h de Brasília já é outro dia em UTC. `en-CA` é
+ * só um truque de formatação — é o locale que o `Intl` devolve
+ * pronto em AAAA-MM-DD, sem precisar remontar a string na mão.
+ */
+export function dataChaveSP(iso: string) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(iso));
+}

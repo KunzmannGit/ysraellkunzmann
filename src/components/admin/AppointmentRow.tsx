@@ -3,12 +3,16 @@
 import { useState } from "react";
 import { Bell, MapPin, Trash2 } from "lucide-react";
 import type { AdminAppointmentRow } from "@/lib/admin";
-import { useNow } from "@/lib/hooks";
 import { getBrowserSupabase } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 /**
- * Uma linha da agenda.
+ * Uma linha de compromisso.
+ *
+ * `compact`: usado dentro do painel de um dia já selecionado no
+ * calendário — a data ali seria redundante (o dia inteiro já diz
+ * qual é), então some o bloco de data e sobra só hora, título,
+ * local e a lixeira.
  *
  * Apagar não precisa de e-mail nem de rota própria — é escrita
  * direta pelo cliente do navegador, protegida pela RLS da tabela
@@ -18,15 +22,15 @@ import { cn } from "@/lib/utils";
 export function AppointmentRow({
   appointment,
   onDeleted,
+  compact = false,
 }: {
   appointment: AdminAppointmentRow;
   onDeleted: (id: string) => void;
+  compact?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
 
-  const agora = useNow();
   const inicio = new Date(appointment.starts_at);
-  const passado = agora !== null && inicio.getTime() < agora;
 
   const data = new Intl.DateTimeFormat("pt-BR", {
     timeZone: "America/Sao_Paulo",
@@ -54,18 +58,20 @@ export function AppointmentRow({
   }
 
   return (
-    <li
-      className={cn(
-        "border-noir-4 bg-noir-2/40 flex items-center gap-4 rounded-sm border p-4",
-        passado && "opacity-50",
+    <li className="border-noir-4 bg-noir-2/40 flex items-center gap-4 rounded-sm border p-4">
+      {!compact && (
+        <>
+          <div className="w-16 shrink-0 text-center">
+            <p className="kicker text-gold capitalize">{data}</p>
+            <p className="font-display text-bone mt-0.5 text-lg leading-none">{hora}</p>
+          </div>
+          <div className="bg-noir-5 h-10 w-px shrink-0" />
+        </>
       )}
-    >
-      <div className="w-16 shrink-0 text-center">
-        <p className="kicker text-gold capitalize">{data}</p>
-        <p className="font-display text-bone mt-0.5 text-lg leading-none">{hora}</p>
-      </div>
 
-      <div className="bg-noir-5 h-10 w-px shrink-0" />
+      {compact && (
+        <p className="font-display text-gold w-14 shrink-0 text-lg leading-none">{hora}</p>
+      )}
 
       <div className="min-w-0 flex-1">
         <p className="font-display text-bone truncate text-lg">{appointment.title}</p>
@@ -86,7 +92,10 @@ export function AppointmentRow({
       <button
         onClick={excluir}
         disabled={busy}
-        className="text-smoke hover:text-ember flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors duration-300 disabled:opacity-40"
+        className={cn(
+          "text-smoke hover:text-ember flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors duration-300",
+          busy && "opacity-40",
+        )}
         aria-label="Apagar compromisso"
       >
         <Trash2 className="h-4 w-4" strokeWidth={1.5} />

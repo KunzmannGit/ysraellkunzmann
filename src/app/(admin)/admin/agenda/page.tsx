@@ -1,6 +1,6 @@
 import { AlertTriangle } from "lucide-react";
 import { listAdminAppointments } from "@/lib/admin";
-import { AgendaList } from "@/components/admin/AgendaList";
+import { AgendaCalendar } from "@/components/admin/AgendaCalendar";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +32,7 @@ export default async function AgendaPage() {
         </p>
       </div>
 
-      <AgendaList initial={result.rows} />
+      <AgendaCalendar initial={result.rows} />
     </>
   );
 }
