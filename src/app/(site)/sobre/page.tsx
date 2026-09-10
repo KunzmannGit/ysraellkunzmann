@@ -41,7 +41,7 @@ export default function SobrePage() {
         lede={`${site.role} e ${site.secondRole}, especializado em locação comercial. Duas profissões que parecem não conversar — até você reparar que as duas são, no fundo, sobre eliminar a distância entre o que a pessoa precisa e o que ela consegue enxergar.`}
         media={
           <div
-            className="relative h-80 w-64 sm:h-96 sm:w-80 lg:h-[32rem] lg:w-[26rem]"
+            className="relative h-[22rem] w-[18rem] sm:h-[26rem] sm:w-[21rem] lg:h-[37rem] lg:w-[30rem]"
             style={{
               maskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
               WebkitMaskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",

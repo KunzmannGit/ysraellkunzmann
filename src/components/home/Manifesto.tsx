@@ -92,7 +92,13 @@ export function Manifesto() {
         {/* Assinatura: quem mede sou eu, não um script */}
         <Reveal delay={0.1}>
           <div className="border-noir-4 mt-16 flex items-end gap-7 border-t pt-10 md:gap-10">
-            <div className="relative h-48 w-40 shrink-0 md:h-64 md:w-52 lg:h-72 lg:w-60">
+            <div
+              className="relative h-48 w-40 shrink-0 md:h-64 md:w-52 lg:h-72 lg:w-60"
+              style={{
+                maskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
+                WebkitMaskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
+              }}
+            >
               <Image
                 src="/perfil/ysraell-home.png"
                 alt="Ysraell Kunzmann"
