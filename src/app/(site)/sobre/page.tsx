@@ -40,7 +40,16 @@ export default function SobrePage() {
         accent="Kunzmann."
         lede={`${site.role} e ${site.secondRole}, especializado em locação comercial. Duas profissões que parecem não conversar — até você reparar que as duas são, no fundo, sobre eliminar a distância entre o que a pessoa precisa e o que ela consegue enxergar.`}
         media={
-          <div className="relative h-64 w-52 sm:h-80 sm:w-64 lg:h-[26rem] lg:w-80">
+          <div
+            className="relative h-80 w-64 sm:h-96 sm:w-80 lg:h-[32rem] lg:w-[26rem]"
+            style={{
+              maskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
+            }}
+          >
+            {/* A foto recortada termina em linha reta na altura da cintura —
+                sem o degradê acima, essa borda reta contra o fundo escuro lia
+                como um corte malfeito, não como o fim natural do retrato. */}
             <Image
               src="/perfil/ysraell-sobre.png"
               alt="Ysraell Kunzmann"
