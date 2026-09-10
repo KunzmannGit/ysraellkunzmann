@@ -39,21 +39,18 @@ export default function SobrePage() {
         title="Ysraell"
         accent="Kunzmann."
         lede={`${site.role} e ${site.secondRole}, especializado em locação comercial. Duas profissões que parecem não conversar — até você reparar que as duas são, no fundo, sobre eliminar a distância entre o que a pessoa precisa e o que ela consegue enxergar.`}
+        media={
+          <div className="relative h-64 w-52 sm:h-80 sm:w-64 lg:h-[26rem] lg:w-80">
+            <Image
+              src="/perfil/ysraell-sobre.png"
+              alt="Ysraell Kunzmann"
+              fill
+              priority
+              className="object-contain object-bottom"
+            />
+          </div>
+        }
       />
-
-      {/* ══ Faixa visual: o retrato ══ */}
-      <section className="relative h-[46svh] min-h-[20rem] overflow-hidden">
-        <Image
-          src="/img/ysraell.jpg"
-          alt="Ysraell Kunzmann, corretor de imóveis"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-          style={{ objectPosition: "50% 22%" }}
-        />
-        <div className="from-noir via-noir/35 to-noir/75 absolute inset-0 bg-linear-to-t" />
-      </section>
 
       {/* ══ O problema ══ */}
       <section className="bg-noir py-24 md:py-36">

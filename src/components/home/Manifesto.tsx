@@ -91,8 +91,8 @@ export function Manifesto() {
 
         {/* Assinatura: quem mede sou eu, não um script */}
         <Reveal delay={0.1}>
-          <div className="border-noir-4 mt-16 flex items-end gap-5 border-t pt-10">
-            <div className="relative h-28 w-24 shrink-0 md:h-36 md:w-28">
+          <div className="border-noir-4 mt-16 flex items-end gap-7 border-t pt-10 md:gap-10">
+            <div className="relative h-48 w-40 shrink-0 md:h-64 md:w-52 lg:h-72 lg:w-60">
               <Image
                 src="/perfil/ysraell-home.png"
                 alt="Ysraell Kunzmann"
@@ -100,9 +100,9 @@ export function Manifesto() {
                 className="object-contain object-bottom"
               />
             </div>
-            <div className="pb-1">
-              <p className="font-display text-bone text-lg">{site.name}</p>
-              <p className="text-smoke mt-1 font-mono text-[10px] tracking-[0.16em] uppercase">
+            <div className="pb-2">
+              <p className="font-display text-bone text-2xl md:text-3xl">{site.name}</p>
+              <p className="text-smoke mt-2 font-mono text-xs tracking-[0.16em] uppercase md:text-sm">
                 {site.role} · {site.creci}
               </p>
             </div>
