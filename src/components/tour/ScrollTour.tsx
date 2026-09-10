@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Maximize2 } from "lucide-react";
-import type { Media, Property, TourChapter } from "@/lib/types";
+import { propertyImages, type Media, type Property, type TourChapter } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useLenis } from "@/components/fx/SmoothScroll";
 import { usePrefersReducedMotion } from "@/lib/hooks";
@@ -139,9 +139,10 @@ export function ScrollTour({ property }: { property: Property }) {
 
   const tour = property.tour;
 
-  // Os quadros: capa primeiro, depois a galeria. Sempre há pelo menos um.
+  // Os quadros: capa primeiro, depois a galeria — sem repetir a capa
+  // quando ela também está na galeria (ver propertyImages).
   const frames = useMemo<Media[]>(
-    () => [property.cover, ...property.gallery],
+    () => propertyImages({ cover: property.cover, gallery: property.gallery }),
     [property.cover, property.gallery],
   );
 

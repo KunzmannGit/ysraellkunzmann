@@ -119,3 +119,22 @@ export interface PropertyFilters {
   q?: string;
   onlyTour?: boolean;
 }
+
+/**
+ * Capa + galeria, sem repetir a capa quando ela também está na
+ * galeria.
+ *
+ * No painel, marcar uma foto da galeria como capa (a estrela do
+ * editor) não a remove da lista — ela continua lá, só que agora
+ * também é a capa. Quem monta capa+galeria como uma sequência só
+ * (o tour, a seção "Galeria" da página do imóvel) via `[cover,
+ * ...gallery]` direto acabava repetindo a mesma foto duas vezes
+ * seguidas: "Chegada" e o quadro seguinte idênticos.
+ *
+ * Um ponto só de verdade em vez de cada tela lembrar de filtrar
+ * por conta própria — foi exatamente esquecer isso que causou o
+ * defeito da primeira vez.
+ */
+export function propertyImages(property: Pick<Property, "cover" | "gallery">): Media[] {
+  return [property.cover, ...property.gallery.filter((m) => m.url !== property.cover.url)];
+}

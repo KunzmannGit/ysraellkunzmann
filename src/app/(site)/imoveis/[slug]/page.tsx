@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Bath, BedDouble, Car, Check, MapPin, Ruler, Sparkles } from "lucide-react";
 
 import { getProperties, getPropertyBySlug, getRelated } from "@/lib/properties";
-import { KIND_LABEL } from "@/lib/types";
+import { KIND_LABEL, propertyImages } from "@/lib/types";
 import { brl } from "@/lib/utils";
 import { site, waLink } from "@/lib/site";
 import { ScrollTour } from "@/components/tour/ScrollTour";
@@ -72,7 +72,7 @@ export default async function PropertyPage({ params }: { params: Promise<{ slug:
 
   const related = await getRelated(property);
   const isRent = property.purpose === "aluguel";
-  const images = [property.cover, ...property.gallery];
+  const images = propertyImages(property);
 
   const jsonLd = {
     "@context": "https://schema.org",
