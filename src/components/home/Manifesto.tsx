@@ -93,7 +93,7 @@ export function Manifesto() {
         <Reveal delay={0.1}>
           <div className="border-noir-4 mt-16 flex items-end gap-7 border-t pt-10 md:gap-10">
             <div
-              className="relative h-48 w-40 shrink-0 md:h-64 md:w-52 lg:h-72 lg:w-60"
+              className="relative h-40 w-32 shrink-0 sm:h-48 sm:w-40 md:h-64 md:w-52 lg:h-72 lg:w-60"
               style={{
                 maskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
                 WebkitMaskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
@@ -103,10 +103,13 @@ export function Manifesto() {
                 src="/perfil/ysraell-home.png"
                 alt="Ysraell Kunzmann"
                 fill
+                sizes="(min-width: 1024px) 240px, (min-width: 768px) 208px, (min-width: 640px) 160px, 128px"
                 className="object-contain object-bottom"
               />
             </div>
-            <div className="pb-2">
+            {/* min-w-0: sem isso o nome nao encolhe nem quebra linha, e
+                num aparelho de 320px ele passava da borda e era cortado. */}
+            <div className="min-w-0 pb-2">
               <p className="font-display text-bone text-2xl md:text-3xl">{site.name}</p>
               <p className="text-smoke mt-2 font-mono text-xs tracking-[0.16em] uppercase md:text-sm">
                 {site.role} · {site.creci}

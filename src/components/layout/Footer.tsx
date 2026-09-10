@@ -61,7 +61,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-ash hover:text-gold text-sm transition-colors duration-400"
+                    className="text-ash hover:text-gold inline-block py-1.5 text-sm transition-colors duration-400"
                   >
                     {item.label}
                   </Link>
@@ -72,13 +72,17 @@ export function Footer() {
 
           <div>
             <p className="kicker mb-5">Falar</p>
-            <ul className="space-y-3 text-sm">
+            {/* O e-mail nao tem espaco onde quebrar e vazava da coluna no
+                celular. `anywhere` (e nao `break-word`) e o que realmente
+                encolhe a caixa: so ele conta a quebra forcada no calculo
+                de largura minima do elemento. */}
+            <ul className="space-y-3 text-sm [overflow-wrap:anywhere]">
               <li>
                 <a
                   href={waLink()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ash hover:text-gold transition-colors duration-400"
+                  className="text-ash hover:text-gold inline-block py-1.5 transition-colors duration-400"
                 >
                   {site.phone}
                 </a>
@@ -86,7 +90,7 @@ export function Footer() {
               <li>
                 <a
                   href={`mailto:${site.email}`}
-                  className="text-ash hover:text-gold transition-colors duration-400"
+                  className="text-ash hover:text-gold inline-block py-1.5 transition-colors duration-400"
                 >
                   {site.email}
                 </a>
@@ -96,7 +100,7 @@ export function Footer() {
                   href={site.social.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ash hover:text-gold transition-colors duration-400"
+                  className="text-ash hover:text-gold inline-block py-1.5 transition-colors duration-400"
                 >
                   Instagram
                 </a>
@@ -106,7 +110,7 @@ export function Footer() {
                   href={site.social.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ash hover:text-gold transition-colors duration-400"
+                  className="text-ash hover:text-gold inline-block py-1.5 transition-colors duration-400"
                 >
                   LinkedIn
                 </a>

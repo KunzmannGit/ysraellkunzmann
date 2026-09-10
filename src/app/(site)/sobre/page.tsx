@@ -55,6 +55,7 @@ export default function SobrePage() {
               alt="Ysraell Kunzmann"
               fill
               priority
+              sizes="(min-width: 1024px) 480px, (min-width: 640px) 336px, 288px"
               className="object-contain object-bottom"
             />
           </div>

@@ -192,8 +192,24 @@
   color: var(--color-smoke);
 }
 
-/* Texto com o ouro escorrendo por dentro */
+/* Texto com o ouro escorrendo por dentro.
+
+   Duas defesas contra o texto SUMIR, que e o modo de falha desta
+   tecnica: como a cor do texto e transparente e quem pinta e o
+   fundo recortado, qualquer navegador que erre o recorte nao mostra
+   ouro pior — nao mostra nada.
+
+   1. Sem suporte a background-clip: text (navegador antigo), o
+      @supports nao aplica a transparencia e sobra ouro solido.
+
+   2. iOS Safari: cada palavra do WordReveal anima com transform, e
+      isso a joga numa camada de composicao propria, onde o recorte
+      do ancestral nao alcanca — texto invisivel no iPhone. Repetir
+      o gradiente em cada <span> descendente resolve, porque ai o
+      recorte e a transformacao moram no mesmo elemento. */
 @utility text-gilded {
+  color: var(--color-gold-lit);
+
   background-image: linear-gradient(
     100deg,
     var(--color-gold-deep) 0%,
@@ -201,9 +217,19 @@
     var(--color-gold) 62%,
     var(--color-gold-deep) 100%
   );
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+
+    & span {
+      background-image: inherit;
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+  }
 }
 
 /* Regua fina que desenha da esquerda pra direita */
