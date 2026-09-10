@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
+import { site } from "@/lib/site";
 import { Counter, Hairline, Reveal, WordReveal } from "@/components/ui/Reveal";
 
 /**
@@ -86,6 +88,26 @@ export function Manifesto() {
             </p>
           </Reveal>
         </div>
+
+        {/* Assinatura: quem mede sou eu, não um script */}
+        <Reveal delay={0.1}>
+          <div className="border-noir-4 mt-16 flex items-end gap-5 border-t pt-10">
+            <div className="relative h-28 w-24 shrink-0 md:h-36 md:w-28">
+              <Image
+                src="/perfil/ysraell-home.png"
+                alt="Ysraell Kunzmann"
+                fill
+                className="object-contain object-bottom"
+              />
+            </div>
+            <div className="pb-1">
+              <p className="font-display text-bone text-lg">{site.name}</p>
+              <p className="text-smoke mt-1 font-mono text-[10px] tracking-[0.16em] uppercase">
+                {site.role} · {site.creci}
+              </p>
+            </div>
+          </div>
+        </Reveal>
 
         {/* Números */}
         <div className="mt-20 grid grid-cols-1 gap-10 sm:grid-cols-3">

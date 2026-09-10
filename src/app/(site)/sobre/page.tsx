@@ -41,17 +41,16 @@ export default function SobrePage() {
         lede={`${site.role} e ${site.secondRole}, especializado em locação comercial. Duas profissões que parecem não conversar — até você reparar que as duas são, no fundo, sobre eliminar a distância entre o que a pessoa precisa e o que ela consegue enxergar.`}
       />
 
-      {/* ══ Faixa visual ══
-          Ysraell: para colocar seu retrato aqui, salve a foto em
-          public/img/ysraell.jpg e troque o src abaixo. Formato ideal:
-          vertical, 1400x1800, luz lateral, fundo escuro. */}
+      {/* ══ Faixa visual: o retrato ══ */}
       <section className="relative h-[46svh] min-h-[20rem] overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&w=2400&q=82"
-          alt="Área comercial ampla e vazia"
+          src="/img/ysraell.jpg"
+          alt="Ysraell Kunzmann, corretor de imóveis"
           fill
+          priority
           sizes="100vw"
           className="object-cover"
+          style={{ objectPosition: "50% 22%" }}
         />
         <div className="from-noir via-noir/35 to-noir/75 absolute inset-0 bg-linear-to-t" />
       </section>
