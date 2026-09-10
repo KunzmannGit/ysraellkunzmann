@@ -84,3 +84,29 @@ export function markSessionFlag(key: string) {
     /* sem storage, a cortina simplesmente roda de novo */
   }
 }
+
+/**
+ * "Agora", em milissegundos — para separar compromisso futuro de
+ * passado, ou sugerir uma data padrão num formulário.
+ *
+ * `Date.now()` é impuro e não pode ser chamado direto no corpo de
+ * um componente (a regra react-hooks/purity barra isso, e com
+ * razão: duas chamadas na mesma renderização podem devolver
+ * valores diferentes). Este hook empresta o mesmo truque das
+ * media queries acima — o valor entra por fora da renderização,
+ * lido pelo React de um jeito que ele sabe que é seguro.
+ *
+ * No servidor a resposta é sempre `null`: sem isso, o HTML
+ * carimbaria um instante que já estaria errado no momento em que
+ * chegasse ao navegador. Código que usa este hook deve tratar
+ * `null` como "ainda não sei" — geralmente por um único quadro.
+ */
+export function useNow() {
+  const subscribe = useCallback(() => () => {}, []);
+
+  return useSyncExternalStore(
+    subscribe,
+    () => Date.now(),
+    () => null,
+  );
+}

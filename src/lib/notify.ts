@@ -1,6 +1,7 @@
 import "server-only";
 import type { LeadInput } from "@/lib/leads";
 import { site } from "@/lib/site";
+import { emailEnabled, escapeHtml as esc, sendEmail } from "@/lib/email";
 
 /* ═══════════════════════════════════════════════════════════
    AVISO POR E-MAIL DE NOVO CONTATO
@@ -10,12 +11,7 @@ import { site } from "@/lib/site";
    e conveniencia. Se o servico de envio estiver fora, o pior
    que acontece e voce descobrir o contato pelo painel em vez
    de pelo celular.
-
-   Por isso tudo aqui e best-effort: sem chave configurada,
-   sai calado; com erro, registra no log e devolve false.
    ═══════════════════════════════════════════════════════════ */
-
-const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
 
 /** Remetente. Precisa ser um dominio verificado no Resend. */
 const FROM = process.env.LEAD_NOTIFY_FROM ?? `Site ${site.name} <site@send.${site.domain}>`;
@@ -26,21 +22,13 @@ const TO = (process.env.LEAD_NOTIFY_TO ?? `${site.email},${site.emailAlt}`)
   .map((e) => e.trim())
   .filter(Boolean);
 
-export const notifyEnabled = Boolean(RESEND_API_KEY);
+export const notifyEnabled = emailEnabled;
 
 const KIND_LABEL: Record<LeadInput["kind"], string> = {
   interesse: "Interesse em imóvel",
   anuncio: "Quer anunciar um imóvel",
   contato: "Contato pelo site",
 };
-
-function esc(s: string) {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 function buildEmail(lead: LeadInput, stored: boolean) {
   const label = KIND_LABEL[lead.kind];
@@ -123,38 +111,11 @@ function buildEmail(lead: LeadInput, stored: boolean) {
  * Nunca lanca: quem chama nao deve nem precisar de try/catch.
  */
 export async function notifyNewLead(lead: LeadInput, stored: boolean): Promise<boolean> {
-  if (!notifyEnabled || TO.length === 0) return false;
-
   const { subject, texto, html } = buildEmail(lead, stored);
 
   // Se a pessoa deixou e-mail, responder na caixa ja vai direto
   // para ela — sem copiar e colar endereco.
   const replyTo = lead.contact.includes("@") ? lead.contact : undefined;
 
-  try {
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: FROM,
-        to: TO,
-        subject,
-        text: texto,
-        html,
-        ...(replyTo ? { reply_to: replyTo } : {}),
-      }),
-    });
-
-    if (!res.ok) {
-      console.error("[notify] Resend recusou:", res.status, (await res.text()).slice(0, 300));
-      return false;
-    }
-    return true;
-  } catch (error) {
-    console.error("[notify] falha ao avisar:", error);
-    return false;
-  }
+  return sendEmail({ from: FROM, to: TO, subject, text: texto, html, replyTo });
 }

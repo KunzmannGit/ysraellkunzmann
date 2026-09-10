@@ -53,7 +53,7 @@ Instagram e LinkedIn em `src/lib/site.ts`.
 
 1. [Rodar na sua máquina](#1-rodar-na-sua-máquina)
 2. [Seus dados no site](#2-seus-dados-no-site)
-3. [Criar o e-mail do domínio](#3-criar-o-e-mail-do-domínio) · [aviso de contato](#3d--aviso-por-e-mail-a-cada-contato-recebido)
+3. [Criar o e-mail do domínio](#3-criar-o-e-mail-do-domínio) · [aviso de contato](#3d--aviso-por-e-mail-a-cada-contato-recebido) · [agenda](#3e--agenda-de-compromissos)
 4. [Ligar o Supabase](#4-ligar-o-supabase)
 5. [Publicar na Vercel](#5-publicar-na-vercel)
 6. [Apontar o domínio](#6-apontar-o-domínio)
@@ -229,6 +229,52 @@ npx vercel env add LEAD_NOTIFY_TO production
   único registro** daquele contato.
 - Se o Resend estiver fora, **o contato não se perde**: já foi gravado no banco e
   está no `/admin`.
+
+---
+
+## 3.E — Agenda de compromissos
+
+`/admin/agenda`: cadastre visitas e compromissos, com dois avisos automáticos por
+e-mail — um na hora que você cadastra (confirmação) e outro na manhã do dia (o
+lembrete).
+
+**Configuração** — as mesmas variáveis do item 3.D cobrem o remetente. Só falta o
+destino, se você quiser diferente do padrão (que já é o seu Gmail):
+
+```bash
+npx vercel env add AGENDA_NOTIFY_TO production   # padrão: ysraellffkunzmann13@gmail.com
+```
+
+**O lembrete diário precisa de duas peças a mais**, porque ele roda sozinho, sem
+ninguém logado:
+
+1. **Segredo do cron** — protege `/api/cron/lembretes` para que só a própria
+   Vercel consiga chamá-la:
+
+   ```bash
+   openssl rand -hex 32
+   ```
+
+   ```bash
+   npx vercel env add CRON_SECRET production
+   ```
+
+2. **Chave de serviço do Supabase** — *Project Settings → API → service_role*.
+   É a única rota do projeto que usa essa chave: como o cron não tem sessão de
+   usuário, não há como a RLS validar um "autenticado" que não existe.
+
+   ```bash
+   npx vercel env add SUPABASE_SERVICE_ROLE_KEY production
+   ```
+
+O agendamento em si já está em `vercel.json` (`0 11 * * *`, ou seja, 8h de
+Brasília todo dia — o Brasil não tem mais horário de verão desde 2019, então o
+deslocamento -03:00 é fixo o ano inteiro). A Vercel lê esse arquivo sozinha; não
+precisa configurar nada no painel dela.
+
+> Um compromisso criado depois que o cron já rodou no dia só recebe o lembrete
+> no dia seguinte. Para o dia de hoje, a confirmação do cadastro já cumpre esse
+> papel.
 
 ---
 
@@ -419,8 +465,12 @@ src/
 │   │   ├── anuncie/            Captação de proprietários
 │   │   └── sobre/  contato/
 │   ├── (admin)/admin/          Painel — sem moldura de marketing
+│   │   └── agenda/             Compromissos e visitas
 │   ├── (auth)/entrar/          Login
-│   └── api/leads/              Recebimento de contatos
+│   └── api/
+│       ├── leads/              Recebimento de contatos
+│       ├── agenda/             Cria compromisso + confirmação por e-mail
+│       └── cron/lembretes/     Lembrete diário (chamado pela Vercel)
 ├── components/
 │   ├── fx/                     Grão, vinheta, cursor, cortina, scroll suave
 │   ├── ui/                     Botão, revelações, magnetismo
@@ -429,18 +479,25 @@ src/
 │   ├── property/               Card, catálogo, galeria
 │   ├── tour/ScrollTour.tsx     ★ O tour imersivo
 │   ├── forms/LeadForm.tsx      Formulário com rede de segurança
-│   └── admin/                  Editor, upload, caixa de contatos
+│   └── admin/                  Editor, upload, caixa de contatos, agenda
 ├── lib/
 │   ├── site.ts                 ★ Seus dados
 │   ├── types.ts                Modelo de domínio
 │   ├── properties.ts           Leitura (Supabase → semente)
 │   ├── filters.ts              Filtragem pura (roda no navegador)
 │   ├── hooks.ts                Estado do navegador reativo
-│   └── supabase/               Clientes de servidor e navegador
+│   ├── email.ts                Envio por Resend (camada comum)
+│   ├── notify.ts                Aviso de novo contato
+│   ├── notify-agenda.ts        Confirmação + lembrete de compromisso
+│   └── supabase/
+│       ├── server.ts           Cliente com sessão (/admin, rotas comuns)
+│       ├── public.ts           Cliente sem sessão (catálogo, sitemap)
+│       └── service.ts          Chave service_role — só o cron usa
 ├── data/properties.ts          Catálogo semente
 └── proxy.ts                    Sessão + proteção do /admin
 scripts/configurar.mjs          Chaves do Supabase (local + Vercel)
 supabase/migrations/            SQL do banco
+vercel.json                     Agendamento do lembrete diário
 ```
 
 ---
@@ -474,6 +531,13 @@ movimento" no sistema com o site aberto desliga as animações na hora.
 `<noscript>` que a esconde e uma animação CSS que a remove aos 6 s. Sem elas, um
 bundle que não carrega deixaria o site preto para sempre — aconteceu uma vez
 durante o desenvolvimento.
+
+**A chave `service_role` vive isolada em `lib/supabase/service.ts`,** importada
+em um único arquivo do projeto: o cron do lembrete diário. Ela ignora toda regra
+de RLS, e existe só porque o cron roda sem sessão de usuário — não há como a
+RLS validar um "autenticado" que não existe às 8h da manhã, sozinho. Todo o
+resto do site (catálogo, painel, formulários) continua funcionando com a chave
+`anon`, que é segura no navegador por design.
 
 ---
 

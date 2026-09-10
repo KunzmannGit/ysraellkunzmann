@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, ExternalLink, Inbox } from "lucide-react";
+import { Building2, CalendarDays, ExternalLink, Inbox } from "lucide-react";
 import { site } from "@/lib/site";
 import { SignOutButton } from "@/components/admin/SignOutButton";
 
@@ -38,6 +38,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               >
                 <Inbox className="h-3.5 w-3.5" strokeWidth={1.5} />
                 Contatos
+              </Link>
+              <Link
+                href="/admin/agenda"
+                className="text-ash hover:text-bone flex items-center gap-2 rounded-full px-3.5 py-2 font-mono text-[10px] tracking-[0.18em] uppercase transition-colors duration-300"
+              >
+                <CalendarDays className="h-3.5 w-3.5" strokeWidth={1.5} />
+                Agenda
               </Link>
             </nav>
           </div>

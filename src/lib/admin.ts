@@ -87,3 +87,30 @@ export async function listAdminLeads(): Promise<
   if (error) return { ok: false, reason: error.message };
   return { ok: true, rows: (data ?? []) as AdminLeadRow[] };
 }
+
+export interface AdminAppointmentRow {
+  id: string;
+  title: string;
+  starts_at: string;
+  location: string | null;
+  notes: string | null;
+  property_slug: string | null;
+  property_title: string | null;
+  reminder_sent: boolean;
+  created_at: string;
+}
+
+export async function listAdminAppointments(): Promise<
+  { ok: true; rows: AdminAppointmentRow[] } | { ok: false; reason: string }
+> {
+  const supabase = await getServerSupabase();
+  if (!supabase) return { ok: false, reason: "sem-supabase" };
+
+  const { data, error } = await supabase
+    .from("appointments")
+    .select("*")
+    .order("starts_at", { ascending: true });
+
+  if (error) return { ok: false, reason: error.message };
+  return { ok: true, rows: (data ?? []) as AdminAppointmentRow[] };
+}
