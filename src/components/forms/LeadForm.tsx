@@ -19,6 +19,7 @@ function Field({
   placeholder,
   textarea,
   rows = 4,
+  autoComplete,
 }: {
   label: string;
   name: string;
@@ -27,6 +28,8 @@ function Field({
   placeholder?: string;
   textarea?: boolean;
   rows?: number;
+  /** Deixa o celular oferecer o preenchimento salvo. */
+  autoComplete?: string;
 }) {
   const shared =
     "peer w-full border-b border-noir-5 bg-transparent pt-6 pb-2.5 text-bone " +
@@ -51,6 +54,7 @@ function Field({
           name={name}
           type={type}
           required={required}
+          autoComplete={autoComplete}
           placeholder={placeholder ?? label}
           data-cursor="text"
           className={shared}
@@ -178,8 +182,8 @@ export function LeadForm({
       />
 
       <div className="grid gap-7 sm:grid-cols-2">
-        <Field label="Seu nome" name="name" required />
-        <Field label="E-mail ou WhatsApp" name="contact" required />
+        <Field label="Seu nome" name="name" required autoComplete="name" />
+        <Field label="E-mail ou WhatsApp" name="contact" required autoComplete="email" />
       </div>
 
       {variant === "anuncio" && (
