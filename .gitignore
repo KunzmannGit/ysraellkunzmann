@@ -46,3 +46,6 @@ yarn-error.log*
 
 # saida do gerador de flythrough (video gerado por IA, nao vai para o repo)
 /flythrough
+
+# Fotos brutas de referencia, nao otimizadas para o site
+/Fotos Ysraell profissional*/

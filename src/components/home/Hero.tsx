@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
+import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDown, Play } from "lucide-react";
 import type { Property } from "@/lib/types";
 import { site } from "@/lib/site";
@@ -12,6 +12,26 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Magnetic } from "@/components/ui/Magnetic";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+
+/** A cada quanto tempo o fundo troca de foto — um imóvel de cada vez, devagar. */
+const INTERVALO_FUNDO_MS = 7000;
+
+/** A cada quanto tempo o cartão "Em destaque" troca de imóvel. */
+const INTERVALO_DESTAQUE_MS = 6000;
+
+/**
+ * Roda um índice de 0 a `total - 1` a cada `intervalMs`. Fica parado
+ * (sempre 0) quando há 0 ou 1 item — não faz sentido "girar" nesse caso.
+ */
+function useRotacao(total: number, intervalMs: number) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (total < 2) return;
+    const id = setInterval(() => setI((atual) => (atual + 1) % total), intervalMs);
+    return () => clearInterval(id);
+  }, [total, intervalMs]);
+  return total < 2 ? 0 : i;
+}
 
 /**
  * Imagem de fundo para quando nenhum imóvel está publicado.
@@ -31,8 +51,13 @@ const FUNDO_NEUTRO =
  * de cinema abrem, e a imagem respira devagar (18s por ciclo) para
  * que a página nunca pareça uma foto parada — mas também nunca
  * chame atenção para a animação em si.
+ *
+ * O fundo agora é um looping pelas capas de todos os imóveis
+ * publicados (um de cada vez, com crossfade) — a home deixou de
+ * "pertencer" a um único imóvel. O cartão "Em destaque" no canto
+ * gira independentemente entre os imóveis marcados como destaque.
  */
-export function Hero({ featured }: { featured: Property | null }) {
+export function Hero({ properties, featured }: { properties: Property[]; featured: Property[] }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -45,15 +70,31 @@ export function Hero({ featured }: { featured: Property | null }) {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-38%"]);
   const textOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0]);
 
-  const capa = featured?.cover.url ?? FUNDO_NEUTRO;
-  const capaAlt = featured?.cover.alt ?? "Estrutura de cobertura de um galpão vista de baixo";
+  const fundoIndex = useRotacao(properties.length, INTERVALO_FUNDO_MS);
+  const fundoAtual = properties[fundoIndex] ?? null;
+  const capa = fundoAtual?.cover.url ?? FUNDO_NEUTRO;
+  const capaAlt = fundoAtual?.cover.alt ?? "Estrutura de cobertura de um galpão vista de baixo";
+
+  const destaqueIndex = useRotacao(featured.length, INTERVALO_DESTAQUE_MS);
+  const destaque = featured[destaqueIndex] ?? null;
 
   return (
     <section ref={ref} className="relative h-[100svh] min-h-[38rem] overflow-hidden">
       {/* ── Camada 1: a fotografia ── */}
       <motion.div className="absolute inset-0" style={{ y: imgY, scale: imgScale }}>
         <div className="animate-breathe relative h-full w-full">
-          <Image src={capa} alt={capaAlt} fill priority sizes="100vw" className="object-cover" />
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={fundoAtual?.id ?? "neutro"}
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.8, ease: EASE }}
+            >
+              <Image src={capa} alt={capaAlt} fill priority sizes="100vw" className="object-cover" />
+            </motion.div>
+          </AnimatePresence>
         </div>
         {/* Escurecimento em três passadas: sem isso o texto não sobrevive à foto */}
         <div className="from-noir via-noir/55 absolute inset-0 bg-linear-to-t to-transparent" />
@@ -139,8 +180,8 @@ export function Hero({ featured }: { featured: Property | null }) {
             transition={{ duration: 1, delay: 1.5, ease: EASE }}
           >
             <Magnetic>
-              {featured ? (
-                <ButtonLink href={`/imoveis/${featured.slug}`} variant="gold" size="lg">
+              {destaque ? (
+                <ButtonLink href={`/imoveis/${destaque.slug}`} variant="gold" size="lg">
                   <Play className="h-3.5 w-3.5 fill-current" strokeWidth={0} />
                   Ver o destaque
                 </ButtonLink>
@@ -159,8 +200,8 @@ export function Hero({ featured }: { featured: Property | null }) {
         </div>
       </motion.div>
 
-      {/* ── Camada 4: o cartão do imóvel em destaque ── */}
-      {featured && (
+      {/* ── Camada 4: o cartão do imóvel em destaque, um por vez ── */}
+      {destaque && (
         <motion.div
           className="absolute right-6 bottom-8 z-30 hidden xl:block"
           initial={{ opacity: 0, x: 40 }}
@@ -168,36 +209,46 @@ export function Hero({ featured }: { featured: Property | null }) {
           transition={{ duration: 1.1, delay: 1.65, ease: EASE }}
           style={{ opacity: textOpacity }}
         >
-          <Link
-            href={`/imoveis/${featured.slug}`}
-            data-cursor="media"
-            data-cursor-label="Ver imóvel"
-            className="group border-noir-5/70 bg-noir/55 hover:border-gold/40 block w-72 rounded-sm border p-5 backdrop-blur-xl transition-colors duration-500"
-          >
-            <div className="flex items-center justify-between">
-              <span className="kicker text-gold">Em destaque</span>
-              <span className="bg-gold relative flex h-1.5 w-1.5 rounded-full">
-                <span className="bg-gold animate-pulse-ring absolute inset-0 rounded-full" />
-              </span>
-            </div>
-            <p className="font-display text-bone mt-4 text-xl leading-tight">{featured.title}</p>
-            <p className="text-smoke mt-1.5 text-xs">
-              {featured.address.district} · {featured.address.city}
-            </p>
-            <p className="text-ash mt-4 font-mono text-[10px] tracking-[0.14em] uppercase">
-              {specLine([
-                featured.area ? `${featured.area} m²` : null,
-                featured.bathrooms ? `${featured.bathrooms} banheiros` : null,
-                featured.parking ? `${featured.parking} vagas` : null,
-              ])}
-            </p>
-            <p className="text-bone mt-3 font-mono text-sm">
-              {brl(featured.price)}
-              <span className="text-smoke text-[10px]">
-                {featured.purpose === "aluguel" ? " /mês" : ""}
-              </span>
-            </p>
-          </Link>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={destaque.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.6, ease: EASE }}
+            >
+              <Link
+                href={`/imoveis/${destaque.slug}`}
+                data-cursor="media"
+                data-cursor-label="Ver imóvel"
+                className="group border-noir-5/70 bg-noir/55 hover:border-gold/40 block w-72 rounded-sm border p-5 backdrop-blur-xl transition-colors duration-500"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="kicker text-gold">Em destaque</span>
+                  <span className="bg-gold relative flex h-1.5 w-1.5 rounded-full">
+                    <span className="bg-gold animate-pulse-ring absolute inset-0 rounded-full" />
+                  </span>
+                </div>
+                <p className="font-display text-bone mt-4 text-xl leading-tight">{destaque.title}</p>
+                <p className="text-smoke mt-1.5 text-xs">
+                  {destaque.address.district} · {destaque.address.city}
+                </p>
+                <p className="text-ash mt-4 font-mono text-[10px] tracking-[0.14em] uppercase">
+                  {specLine([
+                    destaque.area ? `${destaque.area} m²` : null,
+                    destaque.bathrooms ? `${destaque.bathrooms} banheiros` : null,
+                    destaque.parking ? `${destaque.parking} vagas` : null,
+                  ])}
+                </p>
+                <p className="text-bone mt-3 font-mono text-sm">
+                  {brl(destaque.price)}
+                  <span className="text-smoke text-[10px]">
+                    {destaque.purpose === "aluguel" ? " /mês" : ""}
+                  </span>
+                </p>
+              </Link>
+            </motion.div>
+          </AnimatePresence>
         </motion.div>
       )}
 

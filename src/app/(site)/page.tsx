@@ -3,14 +3,14 @@ import { Manifesto } from "@/components/home/Manifesto";
 import { Featured } from "@/components/home/Featured";
 import { DualPath } from "@/components/home/DualPath";
 import { Partnership } from "@/components/home/Partnership";
-import { getFeatured, getHeroProperty } from "@/lib/properties";
+import { getFeatured, getProperties } from "@/lib/properties";
 
 export default async function HomePage() {
-  const [hero, featured] = await Promise.all([getHeroProperty(), getFeatured()]);
+  const [properties, featured] = await Promise.all([getProperties(), getFeatured()]);
 
   return (
     <>
-      <Hero featured={hero} />
+      <Hero properties={properties} featured={featured} />
       <Manifesto />
       <Featured properties={featured} />
       <DualPath />

@@ -159,18 +159,6 @@ export async function getFeatured(): Promise<Property[]> {
   return marked.length > 0 ? marked : all.slice(0, 3);
 }
 
-/**
- * Um imóvel para estrelar a home. Prioriza destaque com tour.
- *
- * Devolve `null` quando não há nada publicado — e o herói sabe se
- * virar sozinho nesse caso. Forçar um imóvel aqui obrigaria a
- * inventar um, que é exatamente o que este site não faz.
- */
-export async function getHeroProperty(): Promise<Property | null> {
-  const all = await getProperties();
-  return all.find((p) => p.featured && p.tour) ?? all.find((p) => p.featured) ?? all[0] ?? null;
-}
-
 export async function getRelated(current: Property, limit = 3): Promise<Property[]> {
   const all = await getProperties();
   const others = all.filter((p) => p.id !== current.id);
