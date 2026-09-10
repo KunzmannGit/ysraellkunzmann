@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
+import { AnimatePresence, motion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Maximize2 } from "lucide-react";
+import { ChevronDown, Maximize2 } from "lucide-react";
 import { propertyImages, type Media, type Property, type TourChapter } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useLenis } from "@/components/fx/SmoothScroll";
@@ -329,6 +329,31 @@ export function ScrollTour({ property }: { property: Property }) {
                 Ver fotos
               </a>
             </div>
+
+            {/* No computador, "Role para caminhar" fica fixo no topo.
+                Não cabe do mesmo jeito no celular — e quem usa celular
+                o dia inteiro já sabe rolar a tela, então o aviso só
+                precisa aparecer até a pessoa dar o primeiro passo.
+                Some sozinho assim que ela sai do primeiro capítulo. */}
+            <AnimatePresence>
+              {active === 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="flex shrink-0 flex-col items-end gap-1.5 md:hidden"
+                >
+                  <span className="on-photo kicker text-mist/70">Role para ver mais</span>
+                  <motion.span
+                    animate={{ y: [0, 6, 0] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <ChevronDown className="on-photo h-4 w-4 text-mist/70" strokeWidth={1.5} />
+                  </motion.span>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
