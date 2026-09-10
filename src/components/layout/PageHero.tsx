@@ -63,7 +63,7 @@ export function PageHero({
 
       <div className="container-noir relative">
         {media ? (
-          <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16">
+          <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-16">
             {texto}
             <Reveal delay={0.2} className="flex justify-center lg:justify-end">
               {media}

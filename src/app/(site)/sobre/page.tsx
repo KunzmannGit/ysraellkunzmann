@@ -41,7 +41,11 @@ export default function SobrePage() {
         lede={`${site.role} e ${site.secondRole}, especializado em locação comercial. Duas profissões que parecem não conversar — até você reparar que as duas são, no fundo, sobre eliminar a distância entre o que a pessoa precisa e o que ela consegue enxergar.`}
         media={
           <div
-            className="relative h-[22rem] w-[18rem] sm:h-[26rem] sm:w-[21rem] lg:h-[37rem] lg:w-[30rem]"
+            /* O PNG foi aparado ate a silhueta (1684x2536), entao a caixa
+               segue essa proporcao exata: sem margem transparente, a cabeca
+               encosta no topo da caixa e alinha com o kicker, e a pessoa
+               ocupa a largura toda em vez de 56% dela. */
+            className="relative aspect-[1684/2536] w-[13rem] sm:w-[16rem] lg:w-[22.5rem]"
             style={{
               maskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
               WebkitMaskImage: "linear-gradient(to bottom, black 78%, transparent 100%)",
@@ -55,7 +59,7 @@ export default function SobrePage() {
               alt="Ysraell Kunzmann"
               fill
               priority
-              sizes="(min-width: 1024px) 480px, (min-width: 640px) 336px, 288px"
+              sizes="(min-width: 1024px) 360px, (min-width: 640px) 256px, 208px"
               className="object-contain object-bottom"
             />
           </div>
