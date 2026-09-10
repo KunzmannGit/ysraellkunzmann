@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useRef, useSyncExternalStore } from "react";
 
 /* ═══════════════════════════════════════════════════════════
    LEITURA DE ESTADO DO NAVEGADOR
@@ -86,15 +86,26 @@ export function markSessionFlag(key: string) {
 }
 
 /**
- * "Agora", em milissegundos — para separar compromisso futuro de
- * passado, ou sugerir uma data padrão num formulário.
+ * "Agora", em milissegundos — resolvido uma vez, congelado depois.
+ * Serve para separar compromisso futuro de passado, ou sugerir uma
+ * data padrão num formulário; não é um relógio vivo.
  *
- * `Date.now()` é impuro e não pode ser chamado direto no corpo de
- * um componente (a regra react-hooks/purity barra isso, e com
- * razão: duas chamadas na mesma renderização podem devolver
- * valores diferentes). Este hook empresta o mesmo truque das
- * media queries acima — o valor entra por fora da renderização,
- * lido pelo React de um jeito que ele sabe que é seguro.
+ * Isto já foi implementado errado uma vez, e o erro ensina algo
+ * específico sobre `useSyncExternalStore`: colocar `Date.now()`
+ * direto no `getSnapshot` parece a mesma receita das media queries
+ * acima, mas não é. `getSnapshot` precisa devolver o MESMO valor
+ * entre chamadas até que algo avise que mudou — é assim que o
+ * React decide se precisa re-renderizar. `Date.now()` muda a cada
+ * milissegundo, então toda chamada parecia "o valor mudou desde a
+ * última vez", e o React entrava num loop de renderização
+ * (`Maximum update depth exceeded`) — reproduzido e confirmado
+ * antes deste conserto.
+ *
+ * A correção: o instante só é lido UMA VEZ, dentro de `subscribe`
+ * — que roda depois da montagem, não durante a renderização, e por
+ * isso pode ler o relógio sem violar a regra de pureza — e fica
+ * guardado numa ref. `getSnapshot` volta a ser estável (a mesma
+ * ref) entre chamadas, como o contrato exige.
  *
  * No servidor a resposta é sempre `null`: sem isso, o HTML
  * carimbaria um instante que já estaria errado no momento em que
@@ -102,11 +113,17 @@ export function markSessionFlag(key: string) {
  * `null` como "ainda não sei" — geralmente por um único quadro.
  */
 export function useNow() {
-  const subscribe = useCallback(() => () => {}, []);
+  const valorRef = useRef<number | null>(null);
+
+  const subscribe = useCallback((onStoreChange: () => void) => {
+    valorRef.current = Date.now();
+    onStoreChange();
+    return () => {};
+  }, []);
 
   return useSyncExternalStore(
     subscribe,
-    () => Date.now(),
+    () => valorRef.current,
     () => null,
   );
 }
