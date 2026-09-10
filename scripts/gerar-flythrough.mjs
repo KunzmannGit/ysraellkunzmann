@@ -148,9 +148,28 @@ const criar = await fetch("https://api.kie.ai/api/v1/jobs/createTask", {
 });
 
 const criado = await criar.json().catch(() => null);
-if (!criar.ok || !criado) {
-  console.error(c.red(`\n✗ createTask falhou (${criar.status})`));
-  console.error(c.dim(JSON.stringify(criado ?? {}, null, 1).slice(0, 600)));
+
+/**
+ * A kie.ai responde HTTP 200 com o erro DENTRO do corpo ({code, msg}).
+ * Checar só o status esconde a mensagem útil: uma falha limpa de saldo
+ * chegava aqui como "não achei o taskId", que manda depurar o lugar
+ * errado. O código do corpo é a fonte da verdade.
+ */
+const codigo = criado?.code;
+if (!criar.ok || !criado || (typeof codigo === "number" && codigo !== 200)) {
+  const msg = criado?.msg ?? criado?.message ?? `HTTP ${criar.status}`;
+  console.error(c.red(`\n✗ ${msg}`));
+
+  const dicas = {
+    402: "Saldo insuficiente. Adicione créditos em kie.ai e rode de novo.",
+    401: "Chave inválida. Confira em kie.ai → API Keys.",
+    403: "Chave sem permissão para este modelo.",
+    422: "Parâmetros recusados. Lembre: reference_image_urls e first_frame_url são excludentes, e 1080p não é aceito aqui.",
+  };
+
+  if (dicas[codigo]) console.error(c.gold(`\n  ${dicas[codigo]}`));
+  else console.error(c.dim(`\n${JSON.stringify(criado ?? {}, null, 1).slice(0, 500)}`));
+
   process.exit(1);
 }
 
