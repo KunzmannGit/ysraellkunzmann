@@ -7,7 +7,7 @@ import { escapeHtml as esc, sendEmail } from "@/lib/email";
 
    Dois momentos, dois formatos:
      · confirmação  — ao cadastrar, "você acabou de marcar isto"
-     · lembrete     — na manhã do dia, "não esqueça"
+     · lembrete     — 1h30 antes, "já vai começar"
 
    O destino é fixo no seu Gmail pessoal, não nos e-mails do site:
    agenda é rotina sua, não canal de atendimento ao cliente.
@@ -114,14 +114,14 @@ export async function notifyAppointmentCreated(a: AppointmentForEmail): Promise<
   });
 }
 
-/** Na manhã do dia: lembrete de que o compromisso é hoje. */
+/** 1h30 antes do horário: lembrete de que já está de saída. */
 export async function notifyAppointmentReminder(a: AppointmentForEmail): Promise<boolean> {
   const { hora } = formatarDataHora(a.startsAt);
-  const { texto, html } = corpo(a, "Hoje");
+  const { texto, html } = corpo(a, "Em 1h30");
   return sendEmail({
     from: FROM,
     to: TO,
-    subject: `Hoje às ${hora}: ${a.title}`,
+    subject: `Às ${hora} (daqui a 1h30): ${a.title}`,
     text: texto,
     html,
   });

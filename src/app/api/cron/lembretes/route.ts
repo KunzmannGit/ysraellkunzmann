@@ -3,15 +3,22 @@ import { getServiceSupabase } from "@/lib/supabase/service";
 import { notifyAppointmentReminder } from "@/lib/notify-agenda";
 
 /**
- * Lembrete diário de compromissos.
+ * Lembrete de compromisso, 1h30 antes do horário marcado — dá tempo
+ * de se arrumar e ir, em vez de um resumo genérico de manhã.
  *
- * A Vercel chama isto uma vez por dia (ver vercel.json) e injeta
+ * A Vercel chama isto a cada 5 minutos (ver vercel.json) e injeta
  * automaticamente `Authorization: Bearer ${CRON_SECRET}` na
  * requisição — é assim que se protege uma rota de cron sem exigir
  * login, e é a forma que a própria documentação da Vercel recomenda.
  * Sem o segredo batendo, a rota nem chega a tocar no banco.
  *
- * Roda sem sessão de usuário (ninguém está logado às 8h da manhã
+ * A janela de busca é de 85 a 95 minutos à frente — 10 minutos de
+ * largura para um cron de 5 em 5 minutos, com folga para não perder
+ * nenhum compromisso caso uma execução atrase ou falhe.
+ * `reminder_sent` garante que, mesmo com a sobreposição das janelas,
+ * cada compromisso só dispara um e-mail.
+ *
+ * Roda sem sessão de usuário (ninguém está logado o dia inteiro
  * automaticamente), por isso usa o cliente de serviço em vez do
  * cliente de servidor comum.
  */
@@ -28,25 +35,15 @@ export async function GET(request: Request) {
     return NextResponse.json({ ok: false, error: "Banco não conectado." }, { status: 503 });
   }
 
-  // "Hoje" em horário de Brasília, não no fuso do servidor (a Vercel
-  // roda em UTC). O Brasil aboliu o horário de verão em 2019, então
-  // o deslocamento -03:00 é fixo o ano inteiro — não há cálculo de
-  // DST a fazer aqui.
-  const hojeSP = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Sao_Paulo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-
-  const inicioDoDia = new Date(`${hojeSP}T00:00:00-03:00`).toISOString();
-  const fimDoDia = new Date(`${hojeSP}T23:59:59.999-03:00`).toISOString();
+  const agora = Date.now();
+  const janelaInicio = new Date(agora + 85 * 60_000).toISOString();
+  const janelaFim = new Date(agora + 95 * 60_000).toISOString();
 
   const { data: compromissos, error } = await supabase
     .from("appointments")
     .select("*")
-    .gte("starts_at", inicioDoDia)
-    .lte("starts_at", fimDoDia)
+    .gte("starts_at", janelaInicio)
+    .lte("starts_at", janelaFim)
     .eq("reminder_sent", false);
 
   if (error) {
@@ -65,8 +62,8 @@ export async function GET(request: Request) {
     });
 
     // Só marca como enviado se o e-mail realmente saiu. Se o Resend
-    // estiver fora agora, tentar de novo amanhã não ajudaria — o
-    // compromisso já teria passado — mas ao menos não mascaramos
+    // estiver fora agora, a próxima execução (5 min depois) ainda
+    // está dentro da janela e tenta de novo — mas não mascaramos
     // uma falha real como sucesso.
     if (ok) {
       await supabase.from("appointments").update({ reminder_sent: true }).eq("id", a.id);
