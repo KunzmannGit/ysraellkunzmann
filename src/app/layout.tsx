@@ -87,6 +87,9 @@ const jsonLd = {
   },
   knowsLanguage: ["pt-BR"],
   memberOf: { "@type": "Organization", name: site.partner.name },
+  // sameAs e como o Google liga estes perfis a esta mesma pessoa —
+  // sem isso ele trata o site e as redes como entidades separadas.
+  sameAs: [site.social.instagram, site.social.linkedin, site.social.github],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

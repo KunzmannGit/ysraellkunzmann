@@ -115,6 +115,16 @@ export function Footer() {
                   LinkedIn
                 </a>
               </li>
+              <li>
+                <a
+                  href={site.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-ash hover:text-gold inline-block py-1.5 transition-colors duration-400"
+                >
+                  GitHub
+                </a>
+              </li>
             </ul>
           </div>
 

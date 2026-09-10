@@ -45,8 +45,8 @@ export const site = {
   },
 
   social: {
-    instagram: "https://instagram.com/",
-    linkedin: "https://linkedin.com/in/",
+    instagram: "https://www.instagram.com/ysraellfkunzmann/",
+    linkedin: "https://www.linkedin.com/in/ysraellkunzmann",
     github: "https://github.com/KunzmannGit",
   },
 } as const;
