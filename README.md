@@ -14,7 +14,7 @@ Tudo open source, tudo em camada gratuita.
 | Hospedagem | Vercel | Hobby |
 | DNS | Cloudflare | Grátis |
 | Registro | Porkbun (`ysraellkunzmann.com`) | já pago |
-| Código | [KunzmannGit/ysraellkunzmann](https://github.com/KunzmannGit/ysraellkunzmann) | privado |
+| Código | [KunzmannGit/ysraellkunzmann](https://github.com/KunzmannGit/ysraellkunzmann) | público |
 
 ---
 
@@ -42,10 +42,6 @@ criar imóvel (anônimo)  401  BLOQUEADO
 storage público         200  fotos carregam sem chave
 POST /api/leads         stored: true
 ```
-
-**Falta:** criar `contato@ysraellkunzmann.com` (seção 3) e preencher os links de
-Instagram e LinkedIn em `src/lib/site.ts`.
-
 
 ---
 
