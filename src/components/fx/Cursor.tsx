@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useMotionValue, useSpring } from "motion/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useHasFinePointer, usePrefersReducedMotion } from "@/lib/hooks";
 
@@ -27,7 +28,11 @@ export function Cursor() {
   // desliga o cursor customizado na hora, sem recarregar a página.
   const fine = useHasFinePointer();
   const reduced = usePrefersReducedMotion();
-  const enabled = fine && !reduced;
+  // A pagina de engenharia tem identidade propria e usa o cursor nativo:
+  // o anel dourado e linguagem do site do corretor.
+  const pathname = usePathname();
+  const foraDoEscopo = pathname?.startsWith("/software") ?? false;
+  const enabled = fine && !reduced && !foraDoEscopo;
 
   const [{ mode, label }, setState] = useState<CursorState>({ mode: "default", label: null });
   const [pressed, setPressed] = useState(false);

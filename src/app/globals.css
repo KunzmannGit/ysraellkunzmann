@@ -43,8 +43,13 @@
   --color-wa: #25d366;
   --color-wa-lit: #4ae083;
 
+  --font-eng: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-eng-serif: var(--font-instrument), "Times New Roman", serif;
+
   --animate-marquee: marquee 38s linear infinite;
   --animate-blink: blink 1.05s steps(1) infinite;
+  --animate-aurora: aurora 14s ease-in-out infinite alternate;
+  --animate-orbit: orbit 22s linear infinite;
 
   /* ─── Tipografia ─── */
   --font-display: var(--font-bodoni), "Didot", "Bodoni MT", Georgia, serif;
@@ -117,6 +122,17 @@
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%      { opacity: 0; }
+}
+
+@keyframes aurora {
+  0%   { transform: translate3d(-6%, -4%, 0) rotate(-4deg) scale(1); }
+  50%  { transform: translate3d(4%, 6%, 0) rotate(3deg) scale(1.12); }
+  100% { transform: translate3d(8%, -6%, 0) rotate(-2deg) scale(1.04); }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 /* ═══════════════════════════ BASE ═══════════════════════════ */
@@ -304,6 +320,41 @@
   &::-webkit-scrollbar { display: none; }
 }
 
+/* Borda que acende onde o mouse esta (ver SpotlightCard) */
+@utility spot-border {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(
+      320px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      rgb(147 197 253 / 0.75),
+      rgb(59 130 246 / 0.25) 35%,
+      transparent 70%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 400ms var(--ease-noir);
+    pointer-events: none;
+  }
+  &:hover::before { opacity: 1; }
+}
+
+/* Texto com gradiente azul da /software */
+@utility text-volt-gradient {
+  background-image: linear-gradient(100deg, #bfdbfe 0%, #60a5fa 40%, #22d3ee 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Grade tecnica de fundo da /software, apagando nas bordas */
 @utility eng-grid {
   background-image:
@@ -322,15 +373,25 @@
   .eng {
     background-color: var(--color-ink);
     color: #c9d3e3;
+    font-family: var(--font-eng);
+    font-feature-settings: "ss01", "cv05";
   }
   .eng h1,
   .eng h2,
   .eng h3 {
-    font-family: var(--font-sans);
-    font-weight: 650;
-    letter-spacing: -0.035em;
-    line-height: 1.04;
+    font-family: var(--font-eng);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.02;
     color: #f2f6fc;
+  }
+  /* O itálico editorial: uma palavra por título, nunca a frase toda. */
+  .eng em {
+    font-family: var(--font-eng-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    font-size: 1.08em;
   }
   .eng ::selection {
     background-color: var(--color-volt);
