@@ -333,19 +333,15 @@ export default function SoftwarePage() {
             </Reveal>
           </div>
 
-          {/* Retrato + terminal */}
-          <Reveal delay={0.25} className="relative mx-auto w-full max-w-[26rem] lg:max-w-none">
-            <div className="relative mx-auto w-full max-w-[24rem]">
-              {/* Anel orbital atrás do retrato */}
+          {/* Retrato + terminal. O terminal fica ABAIXO do retrato e só
+              encosta na borda inferior do cartão: o rosto nunca é coberto. */}
+          <Reveal delay={0.25} className="relative mx-auto w-full max-w-[24rem] lg:max-w-[26rem]">
+            <div className="relative mx-auto w-full max-w-[22rem] lg:ml-auto lg:mr-0">
+              {/* Luz difusa atrás do retrato */}
               <div
                 aria-hidden
-                className="animate-orbit absolute -inset-6 rounded-[2.6rem] opacity-70 [animation-duration:30s]"
-                style={{
-                  background:
-                    "conic-gradient(from 0deg, transparent 0deg, rgb(59 130 246 / 0.55) 60deg, transparent 120deg, transparent 240deg, rgb(34 211 238 / 0.45) 300deg, transparent 360deg)",
-                  maskImage: "radial-gradient(closest-side, transparent 92%, black 94%)",
-                  WebkitMaskImage: "radial-gradient(closest-side, transparent 92%, black 94%)",
-                }}
+                className="absolute -inset-10 rounded-full opacity-60 blur-[70px]"
+                style={{ background: "radial-gradient(circle, rgb(59 130 246 / 0.55), transparent 65%)" }}
               />
               <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[2rem] border border-white/10 bg-linear-to-b from-[#10203f] to-[#070b14] shadow-[0_40px_100px_-30px_rgb(59_130_246/0.45)]">
                 <div
@@ -368,7 +364,7 @@ export default function SoftwarePage() {
               </div>
             </div>
 
-            <Terminal className="relative z-10 mx-auto -mt-20 w-[92%] max-w-[22rem] lg:absolute lg:bottom-6 lg:-left-12 lg:mt-0 lg:w-[20rem]" />
+            <Terminal className="relative z-10 mx-auto -mt-8 w-[94%] max-w-[22rem] lg:mr-6 lg:ml-0 lg:w-[21rem]" />
           </Reveal>
         </div>
       </section>

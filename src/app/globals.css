@@ -49,7 +49,6 @@
   --animate-marquee: marquee 38s linear infinite;
   --animate-blink: blink 1.05s steps(1) infinite;
   --animate-aurora: aurora 14s ease-in-out infinite alternate;
-  --animate-orbit: orbit 22s linear infinite;
 
   /* ─── Tipografia ─── */
   --font-display: var(--font-bodoni), "Didot", "Bodoni MT", Georgia, serif;
@@ -128,11 +127,6 @@
   0%   { transform: translate3d(-6%, -4%, 0) rotate(-4deg) scale(1); }
   50%  { transform: translate3d(4%, 6%, 0) rotate(3deg) scale(1.12); }
   100% { transform: translate3d(8%, -6%, 0) rotate(-2deg) scale(1.04); }
-}
-
-@keyframes orbit {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
 }
 
 /* ═══════════════════════════ BASE ═══════════════════════════ */
@@ -382,7 +376,9 @@
     font-family: var(--font-eng);
     font-weight: 700;
     letter-spacing: -0.04em;
-    line-height: 1.02;
+    /* 1.1, nao 1.02: cada palavra do titulo anima dentro de uma mascara
+       com overflow hidden, e abaixo disso o "g" de "pagar" sai cortado. */
+    line-height: 1.1;
     color: #f2f6fc;
   }
   /* O itálico editorial: uma palavra por título, nunca a frase toda. */
