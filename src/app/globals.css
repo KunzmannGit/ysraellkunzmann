@@ -31,6 +31,21 @@
   --color-ember: #c2410c;
   --color-jade: #15803d;
 
+  /* ─── Engenharia (/software): identidade propria, azul de nuvem ─── */
+  --color-ink: #05070c;
+  --color-ink-2: #0a0e17;
+  --color-ink-3: #101624;
+  --color-line: #1c2536;
+  --color-volt-deep: #1d4ed8;
+  --color-volt: #3b82f6;
+  --color-volt-lit: #93c5fd;
+  --color-signal: #22d3ee;
+  --color-wa: #25d366;
+  --color-wa-lit: #4ae083;
+
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-blink: blink 1.05s steps(1) infinite;
+
   /* ─── Tipografia ─── */
   --font-display: var(--font-bodoni), "Didot", "Bodoni MT", Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -92,6 +107,16 @@
 @keyframes drift {
   0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
   50%      { transform: translate3d(2%, -3%, 0) rotate(1.5deg); }
+}
+
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
 }
 
 /* ═══════════════════════════ BASE ═══════════════════════════ */
@@ -277,6 +302,43 @@
 @utility no-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
+}
+
+/* Grade tecnica de fundo da /software, apagando nas bordas */
+@utility eng-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-line) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-line) 70%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 30%, transparent 100%);
+}
+
+/* ═══════════════ ESCOPO DA PAGINA DE ENGENHARIA ═══════════════
+   A /software tem identidade propria: sans pesada no lugar da
+   didone, azul de nuvem no lugar do ouro. O escopo .eng impede
+   que isso vaze para o site do corretor. */
+@layer base {
+  .eng {
+    background-color: var(--color-ink);
+    color: #c9d3e3;
+  }
+  .eng h1,
+  .eng h2,
+  .eng h3 {
+    font-family: var(--font-sans);
+    font-weight: 650;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+    color: #f2f6fc;
+  }
+  .eng ::selection {
+    background-color: var(--color-volt);
+    color: white;
+  }
+  .eng :focus-visible {
+    outline-color: var(--color-volt-lit);
+  }
 }
 
 /* ═══════════════════ COMPORTAMENTO GLOBAL ═══════════════════ */
