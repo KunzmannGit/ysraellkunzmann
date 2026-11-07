@@ -11,6 +11,24 @@ export const metadata: Metadata = {
   title: "Engenharia de software",
   description: `${site.name} é engenheiro de software especialista em back-end e infraestrutura, com foco em Microsoft Azure e presença em AWS. Criação de software, APIs, sites e ambientes em nuvem.`,
   alternates: { canonical: "/software" },
+  keywords: [
+    "engenharia de software",
+    "desenvolvedor back-end",
+    "infraestrutura em nuvem",
+    "Azure",
+    "AWS",
+    "desenvolvimento de sites",
+    "Ysraell Kunzmann",
+  ],
+  openGraph: {
+    title: `Engenharia de software · ${site.name}`,
+    description: "Back-end, APIs e infraestrutura em nuvem, com foco em Azure.",
+    url: `${site.url}/software`,
+  },
+  twitter: {
+    title: `Engenharia de software · ${site.name}`,
+    description: "Back-end, APIs e infraestrutura em nuvem, com foco em Azure.",
+  },
 };
 
 const SERVICOS = [
@@ -33,6 +51,24 @@ const SERVICOS = [
     icon: Globe,
     title: "Sites e aplicações web",
     body: "Sites institucionais, landing pages e aplicações web com foco em velocidade, SEO e uma experiência que convence na primeira rolagem. Como este site que você está vendo.",
+  },
+] as const;
+
+const PROJETOS = [
+  {
+    tag: "Aplicativo de frete · Simple Safety",
+    title: "WeTruck",
+    body: "Aplicativo que conecta clientes a motoristas de frete, desenvolvido em parceria com a Simple Safety, empresa que presta serviço para a Samarco. Eu atuei no desenvolvimento.",
+  },
+  {
+    tag: "Sistema web · Melon AI",
+    title: "Melon CRM",
+    body: "CRM com backend e frontend separados, com fluxo de desenvolvimento e release controlado: nada vai para produção sem passar pelo ambiente de testes.",
+  },
+  {
+    tag: "Site e infraestrutura",
+    title: "ysraellkunzmann.com",
+    body: "Este site: Next.js com banco, arquivos e login no Supabase, painel administrativo próprio e publicação na Vercel. Construído do desenho ao servidor, sem plugin comprado.",
   },
 ] as const;
 
@@ -124,6 +160,27 @@ export default function SoftwarePage() {
                   <servico.icon className="text-gold-deep h-6 w-6 shrink-0" strokeWidth={1.15} />
                   <h3 className="font-display text-bone text-2xl leading-tight">{servico.title}</h3>
                   <p className="text-ash leading-relaxed">{servico.body}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ══ Projetos ══ */}
+      <section className="bg-noir py-24 md:py-32">
+        <div className="container-noir">
+          <p className="kicker text-gold mb-14">Projetos reais</p>
+          <Hairline className="mb-2" />
+          <ul>
+            {PROJETOS.map((projeto, i) => (
+              <Reveal key={projeto.title} as="li" delay={i * 0.1}>
+                <div className="border-noir-4 grid gap-5 border-b py-10 md:grid-cols-[1fr_1.4fr] md:gap-12">
+                  <div>
+                    <p className="kicker text-gold-deep mb-3">{projeto.tag}</p>
+                    <h3 className="font-display text-bone text-3xl leading-tight">{projeto.title}</h3>
+                  </div>
+                  <p className="text-ash leading-relaxed">{projeto.body}</p>
                 </div>
               </Reveal>
             ))}
